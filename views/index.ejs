@@ -59,25 +59,15 @@
 
         <ul class="nav navbar-top-links navbar-right">
 
-            <li class="dropdown" uib-dropdown ng-show="theProject">
-
-                <a class="dropdown-toggle" uib-dropdown-toggle id="map-switch" href>
-                    <i class="fa fa-map fa-fw"></i>   <i class="fa fa-caret-down"></i>
+            <li class="dropdown" ng-show="showDashboard" >
+                <a class="dropdown-toggle" ng-class="{'selected': isMenuActive('/dashboard')}" href="dashboard">
+                    <i class="fa fa-dashboard"></i> {{'navigation.dashboard' | translate }}
                 </a>
-                <ul class="dropdown-menu dropdown-user" uib-dropdown-menu aria-labelledby="map-switch">
-                    <li>
-                        <a href="/">
-                            <div>
-                                <i class="fa fa-map-marker fa-fw"></i> {{'navigation.mapCountry' | translate }}
-                            </div>
-                        </a>
-                    </li>
-                </ul>
 
             </li>
 
             <li class="dropdown" ng-show="showUpgrade" >
-                <a class="dropdown-toggle" ng-class="{'selected': isMenuActive('/upgrade')}" href="upgrade/{{theProject._id}}">
+                <a class="dropdown-toggle" ng-class="{'selected': isMenuActive('/upgrade')}" href="upgrade">
                     <i class="fa fa-cloud-download"></i> {{'navigation.upgrade' | translate }}
                 </a>
 

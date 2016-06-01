@@ -259,7 +259,16 @@ angular.module('upgradeManager.controllers', [])
 
         $scope.openUserManagementModal = function() {
             openUserManagementModalCore($http, $log, $uibModal);
-        }
+        };
+
+        $http({cache: true, method: 'GET', url: '/api/isAuthorized/dashboard'}).
+        success(function(data, status, headers, config) {
+            var isAuthorized = data;
+            $scope.showDashboard = isAuthorized;
+        }).
+        error(function(data, status, headers, config) {
+
+        });
 
 
         $http({cache: true, method: 'GET', url: '/api/isAuthorized/upgrade'}).
@@ -277,7 +286,15 @@ angular.module('upgradeManager.controllers', [])
 
 }])
 
+.controller('DashboardController', ['$rootScope', '$scope', '$http',
+    'editableOptions', 'editableThemes','utility', '$translate',
+    '$stateParams', 'events','socket', 'constants', 'localStorageService', '$log', '$uibModal',
+    function ($rootScope, $scope, $http, editableOptions,
+              editableThemes, utility, $translate, $stateParams,
+              events, socket, constants, localStorageService, $log, $uibModal) {
+        console.log('Dashboard controller')
 
+}])
 
 .controller('UpgradeController', ['$rootScope', '$scope', '$http',
     'editableOptions', 'editableThemes','utility', '$translate',

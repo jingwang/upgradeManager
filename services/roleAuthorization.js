@@ -1,6 +1,6 @@
 var authorization = {
-    'admin': ['monitor', 'history', 'statistics', 'admin', 'process', 'upgrade'],
-    'user': ['monitor', 'history', 'statistics', 'process']
+    'admin': ['dashboard', 'upgrade'],
+    'user': ['dashboard']
 }
 
 exports.roleAuthorization = authorization;

@@ -24,14 +24,21 @@ angular.module('upgradeManager',
         $stateProvider
             .state('default', {
                 url: "/",
-                templateUrl: "partial/upgrade.ejs",
-                controller: 'UpgradeController',
+                templateUrl: "partial/dashboard.ejs",
+                controller: 'DashboardController',
                 authenticate: true
             })
 
             .state('login', {
                 url: "/login",
                 controller: 'LoginController'
+            })
+
+            .state('dashboard', {
+                url: "/dashboard",
+                templateUrl: "partial/dashboard.ejs",
+                controller: 'DashboardController',
+                authenticate: true
             })
 
 
@@ -72,7 +79,7 @@ angular.module('upgradeManager',
             },
 
             'navigation': {
-                'process': 'Process Diagram',
+                'dashboard': 'Dashboard',
                 'upgrade': 'Software Upgrade',
                 'userSetting': 'User Setting',
                 'logout': 'Logout',
