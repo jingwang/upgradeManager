@@ -69,6 +69,7 @@ $ mongorestore mongodump
 your_server_ip  mqtt.gushenxing.com
 
 _METHOD 1: Secure mqtt broker, with self-signed certificate_
+
 **Create mosca server ssl self-signed certificate for domain name: mqtt.gushenxing.com (openssl)**
 ```
 $ openssl genrsa -out key.pem 2048
@@ -95,6 +96,7 @@ rejectUnauthorized: false
 
 
 _METHOD 2: Secure mqtt broker, with CA signed certificate_
+
 **Create a self-sighed root certificate (i.e., becoming a ca (certificate authority)), and use this root certificate to sign server certificate request**
 
 * Create self-signed root certificate (ca certificate)
