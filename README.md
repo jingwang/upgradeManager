@@ -30,14 +30,14 @@ The Upgrade Manager is a web application managing software upgrade for registere
 
 4. start up application in ssl mode (i.e., mqtt in ssl, application has user authentication)
 `$ cd /usr/local/src/updateManager`
-`$ npm run startup`
+`$ npm start`
 to login:
 username: admin@gushenxing.com
 password: gushenxing123
 
 6. start up application in none-ssl mode (i.e., mqtt not in ssl, application does not have user authentication)
 `$ cd /usr/local/src/updateManager`
-`$ npm run startup-nossl`
+`$ npm run start-nossl`
 
 
 # Tools:

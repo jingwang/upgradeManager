@@ -5,6 +5,11 @@ if(process.argv.length > 2){
         ssl = false;
     }
 }
+if(ssl){
+    console.log("Running Upgrade Manager in SSL mode");
+}else{
+    console.log("Running Upgrade Manager in NONE-SSL mode");
+}
 
 var mqttServer = require('./services/mqttServer.js');
 var gatewayStatusListener = require('./services/statusListener.js');

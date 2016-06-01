@@ -38,7 +38,7 @@
   },
   "scripts": {
     "init-app": "node scripts/initApp.js",
-    "startup": "node app.js",
-    "startup-nossl": "node app.js nossl"
+    "start": "node app.js",
+    "start-nossl": "node app.js nossl"
   }
 }
