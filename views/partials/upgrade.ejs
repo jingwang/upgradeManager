@@ -1,0 +1,46 @@
+<div class="partial-content">
+
+    <div ng-repeat="gateway in gateways" ng-init="gatewayIndex=$index" class="panel panel-default">
+        <div class="panel-heading">
+            <a href="" ng-click="gateway.isCollapsed = !gateway.isCollapsed">
+                <i ng-show="gateway.alive" class="fa fa-heartbeat fa-fw info"></i>
+                <i ng-show="!gateway.alive" class="fa fa-heart-o fa-fw inactive"></i>
+                Gateway-{{gateway.gatewayId}} : {{gateway.name}} : Current Version : {{gateway.gatewaySoftwareUpgrade.softwareVersion}}
+                <i ng-show="gateway.gatewaySoftwareUpgrade.status == 'CONFIRMED'" class="info fa fa-check fa-fw"></i>
+                <i ng-show="gateway.gatewaySoftwareUpgrade.status == 'PUBLISHED'" class="info fa fa-hourglass-2 fa-fw"></i>
+            </a>
+
+
+            <span class="pull-right">
+                <span ng-show="gateway.newVersion" class="info upgrade-available">
+                    Version {{gateway.newVersion}} now available
+                </span>
+
+
+                <button type="button"
+                        ng-disabled="!gateway.newVersion && gateway.gatewaySoftwareUpgrade.status == 'CONFIRMED'"
+                        class="btn btn-primary btn-xs"
+                        ng-click="openSoftwareUpgradeModal(gateway);">
+                    <i class="fa fa-cloud-download fa-fw"></i> {{'label.upgrade' | translate }}
+                </button>
+
+            </span>
+        </div>
+        <div ng-show="gateway.isCollapsed" class="panel-body">
+            <div ng-show="gateway.logs" class="list-group">
+                <div ng-repeat="log in gateway.logs" class="list-group-item">
+                    {{'label.version' | translate }}: {{log.content}}
+                    <span class="pull-right text-muted small">
+                        <em>{{log.username}} @ {{log.timestamp | date:"yyyy-MM-dd hh:mm:ss"}}</em>
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+</div>

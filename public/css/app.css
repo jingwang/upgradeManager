@@ -1,0 +1,321 @@
+body {
+    background-color: #fff;
+}
+ul.no-bullet {
+    list-style-type: none;
+}
+.panel-no-border {
+    border-style:none;
+}
+
+.list-group-item-no-border {
+    border-style:none;
+}
+
+.btn-group-bottom {
+    margin-top: 32%;
+}
+
+.sensor-gauge {
+    margin: auto;
+}
+
+.gauge-wrapper {
+    width: 100%;
+    margin: auto;
+}
+
+.gauge-wrapper img.small {
+    max-width:100%;
+    max-height:100%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10%;
+    margin-bottom:10.5%;
+}
+
+.gauge-wrapper img.large {
+    max-width:100%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10%;
+    margin-bottom:10.5%;
+}
+
+.editable-wrap {
+    width: 80%;
+}
+
+.editable-checkbox {
+    width: 24%;
+}
+
+a.list-group-item-info,
+a.list-group-item-info:focus,
+a.list-group-item-info:hover,
+a.list-group-item,
+a.list-group-item:focus,
+a.list-group-item:hover {
+    background-color: #fff;
+}
+
+.breadcrumb {
+    background-color: #fff;
+}
+
+.partial-content {
+    padding-top: 20px;
+}
+
+.top-panel {
+    display:table;
+}
+
+.panel-search {
+    background-color: #f8f8f8;
+}
+
+.equal-height-col {
+    float: none;
+    display: table-cell;
+    vertical-align: bottom;
+}
+.station-actions {
+    padding-bottom: 60px;
+}
+
+.nav-brand-project {
+    font-size: 14px;
+}
+
+.top-menu-project {
+    font-size: 16px;
+}
+
+.navbar-outer .navbar-brand {
+    color: black;
+    /*font-size: 21px;*/
+}
+
+.navbar-brand.navbar-second {
+    color: #337ab7;
+    font-size: 14px;
+    padding-left: 50px;
+}
+
+a.navbar-brand.navbar-second:hover {
+    color: #337ab7;
+}
+
+.navbar-outer {
+    /*background-color: #98ccfb;*/
+    /*border-color:#98ccfb;*/
+
+    background-color: #98ccfb;
+    border-bottom: 4px solid #57b3ff;
+}
+
+.navbar-outer a.selected {
+    background-color: #eee;
+}
+
+
+.widget-panel {
+    margin-bottom: 20px;
+    background-color: #fff;
+    box-shadow:none;
+    border-radius:0;
+}
+
+.widget-panel .panel-header {
+    padding: 10px 15px;
+    /*background-color: #f5f5f5;*/
+    /*border-top: 1px solid #ddd;*/
+    /*border-bottom-right-radius: 3px;*/
+    /*border-bottom-left-radius: 3px;*/
+    border-bottom: 1px solid;
+    border-color: #ddd;
+}
+
+.widget-panel .panel-footer {
+    padding: 10px 15px;
+    background-color: #ffffff;
+    border:none;
+    /*border-top: 1px solid #ddd;*/
+    /*border-bottom-right-radius: 3px;*/
+    /*border-bottom-left-radius: 3px;*/
+}
+
+.sidebar-bottom {
+    margin-top: 0;
+
+}
+
+.col-search {
+    /*background-color: #f8f8f8;*/
+    /*margin-left: -15px;*/
+}
+
+.panel-default .panel-heading {
+    color: #333;
+    background-color: #f5f5f5;
+    border-color: #ddd;
+}
+
+.chn-enable-check {
+    margin-right: 30px;
+}
+
+.status-note {
+    margin-left: 7px;
+    margin-right: 7px;
+    font-size: smaller;
+}
+
+.panel-invisible {
+    border: none;
+}
+
+.panel-invisible .panel-heading {
+    background-color: transparent;
+}
+
+.panel-invisible .panel-footer {
+    border: none;
+}
+
+
+/* baidu map */
+.map-canvas {
+    width: 800px;
+    height: 600px;
+}
+
+.fa.super-big {
+    font-size: 193px;
+    margin-left: 17%
+}
+
+.fa.extra-big {
+    font-size: 300px;
+    margin: 10px 42px 10px 42px;
+}
+
+.fa.error {
+    color: red;
+}
+
+.fa.info {
+    color: green;
+}
+
+.fa.warning {
+    color: orange;
+}
+
+.fa .inactive {
+    color: grey;
+}
+
+.sensor-grid {
+    /*width: 500px;*/
+}
+
+.stats-grid {
+    /*width: 600px;*/
+    height: 545px;
+}
+
+.nav-second-level {
+    padding-left: 30px;
+}
+
+.bottom-panel {
+    margin-top: 30px;
+}
+
+.grid-header-align {
+    text-align: center;
+}
+
+.grid-align {
+    text-align: center;
+}
+
+.title-chn-count {
+    margin-right: 20px;
+}
+
+
+/* thermometer */
+/* Thermometer column and text */
+.thermometer {
+    margin:50% 0 0 50%;
+    left:-15px;
+    top:-100px;
+    width:22px;
+    height:150px;
+    display:block;
+    font:bold 14px/152px helvetica, arial, sans-serif;
+    text-indent: 36px;
+    background: -webkit-linear-gradient(top, #fff 0%, #fff 50%, #db3f02 50%, #db3f02 100%);
+    border-radius:22px 22px 0 0;
+    border:5px solid #4a1c03;
+    border-bottom:none;
+    position:absolute;
+    box-shadow:inset 0 0 0 4px #fff;
+    color:#4a1c03;
+}
+/* Thermometer Bulb */
+.thermometer:before {
+    content:' ';
+    width:44px;
+    height:44px;
+    display:block;
+    position:absolute;
+    top:142px;
+    left:-16px;
+    z-index:-1;
+    /* Place the bulb under the column */
+    background:#db3f02;
+    border-radius:44px;
+    border:5px solid #4a1c03;
+    box-shadow:inset 0 0 0 4px #fff;
+}
+/* This piece here connects the column with the bulb */
+.thermometer:after {
+    content:' ';
+    width:14px;
+    height:7px;
+    display:block;
+    position:absolute;
+    top:146px;
+    left:4px;
+    background:#db3f02;
+}
+
+.input-error {
+    font-size: smaller;
+    padding-top: 5px;
+    padding-bottom: 10px;
+    color: red;
+}
+
+.input-info {
+    font-size: smaller;
+    padding-top: 5px;
+    padding-bottom: 10px;
+    color: green;
+}
+
+.digital-gauge {
+    /*color: darkgreen;*/
+    font-size: 36px;
+    font-weight: 500;
+    line-height: 1.1;
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}

@@ -1,0 +1,49 @@
+{
+  "name": "central-platform",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "device monitor application's central data platform",
+  "devDependencies": {
+    "mocha": "2.x.x"
+  },
+  "dependencies": {
+    "basic-auth": "latest",
+    "body-parser": "latest",
+    "bytebuffer": "latest",
+    "connect-roles": "latest",
+    "cookie-parser": "latest",
+    "crc": "latest",
+    "crc-32": "latest",
+    "crypto": "latest",
+    "ejs": "latest",
+    "errorhandler": "latest",
+    "express": "latest",
+    "express-session": "latest",
+    "method-override": "latest",
+    "mongoose": "latest",
+    "morgan": "latest",
+    "mosca": "latest",
+    "mqtt": "latest",
+    "multer": "latest",
+    "node-schedule": "latest",
+    "node-uuid": "latest",
+    "nools": "latest",
+    "passport": "latest",
+    "passport-local": "latest",
+    "passport-local-mongoose": "latest",
+    "serve-favicon": "latest",
+    "socket.io": "latest",
+    "underscore": "latest",
+    "xml2js": "latest",
+    "xregexp": "latest",
+    "node-cahce": "latest",
+    "winston": "latest",
+    "q": "latest",
+    "chokidar": "latest"
+  },
+
+  "scripts": {
+    "initUser": "node scripts/initUser.js"
+  }
+
+}
