@@ -278,7 +278,7 @@ exports.getEventLogs = function(query, callback, errCallback){
         condition.event = query.event;
     }
 
-    mongoose.model('EventLog').find(condition, null, { sort: { timestamp: 1 }}, function (err, docs) {
+    mongoose.model('EventLog').find(condition, null, { sort: { timestamp: -1 }}, function (err, docs) {
         if(err){
             logger.error(err);
             if(errCallback){

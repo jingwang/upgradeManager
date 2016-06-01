@@ -329,6 +329,7 @@ angular.module('upgradeManager.controllers', [])
                     if(gateway.newVersion == softwareVersion) {
                         gateway.newVersion = undefined;
                     }
+                    refreshEventLog(gateway);
                     break;
                 }
             }
@@ -348,6 +349,7 @@ angular.module('upgradeManager.controllers', [])
                     if(gateway.newVersion == softwareVersion) {
                         gateway.newVersion = undefined;
                     }
+                    refreshEventLog(gateway);
                     break;
                 }
             }
@@ -357,6 +359,19 @@ angular.module('upgradeManager.controllers', [])
         $scope.openSoftwareUpgradeModal = function (gateway) {
             openSoftwareUpgradeModalCore($http, $log, $uibModal, gateway);
         };
+
+        var refreshEventLog = function(gateway){
+            $http({method: 'GET', url: '/api/eventLog?gatewayId=' + gateway.gatewayId + '&event=' + events.eventLogSoftwareDeployed}).
+            success(function(logData, status, headers, config) {
+                console.log(logData);
+                gateway.logs = logData.data;
+
+
+            }).
+            error(function(data, status, headers, config) {
+
+            });
+        }
 
         var loadSoftwareUpgradeForGateway = function(gateway, files) {
             // load associated deviceConfig and sensors
@@ -372,18 +387,7 @@ angular.module('upgradeManager.controllers', [])
                         }
                     }
                 }
-                console.log(gateway);
-
-                $http({method: 'GET', url: '/api/eventLog?gatewayId=' + gateway.gatewayId + '&event=' + events.eventLogSoftwareDeployed}).
-                success(function(logData, status, headers, config) {
-                    console.log(logData);
-                    gateway.logs = logData.data;
-
-
-                }).
-                error(function(data, status, headers, config) {
-
-                });
+                refreshEventLog(gateway);
 
             }).
             error(function(data, status, headers, config) {
