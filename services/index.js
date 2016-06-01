@@ -5,8 +5,6 @@ var fs = require('fs');
 var configuration = require('../config.js')();
 var roleAuthorization = require('../services/roleAuthorization.js').roleAuthorization;
 var logger = require('winston');
-var xml2js = require('xml2js');
-
 
 function isInt(value) {
     var x;

@@ -1,7 +1,4 @@
-/** utility functions **/
-
-
-
+/** UTILITY FUNCTIONS **/
 var openCreateUserModalCore = function (http, log, uibModal) {
 
     var modalInstance = uibModal.open({
@@ -75,10 +72,10 @@ var openSoftwareUpgradeModalCore = function (http, log, uibModal, gateway) {
     }, function () {
         log.info('Modal dismissed at: ' + new Date());
     });
-}
+};
 
 
-/** controllers **/
+/** CONTROLLERS **/
 
 angular.module('upgradeManager.controllers', [])
 
@@ -131,7 +128,7 @@ angular.module('upgradeManager.controllers', [])
             password: '',
             role: 'user'
         };
-    }
+    };
 
     $scope.newUser = initNewUser();
 
@@ -292,7 +289,7 @@ angular.module('upgradeManager.controllers', [])
     function ($rootScope, $scope, $http, editableOptions,
               editableThemes, utility, $translate, $stateParams,
               events, socket, constants, localStorageService, $log, $uibModal) {
-        console.log('Dashboard controller')
+        console.log('Dashboard controller');
 
 }])
 
@@ -388,7 +385,7 @@ angular.module('upgradeManager.controllers', [])
             error(function(data, status, headers, config) {
 
             });
-        }
+        };
 
         var loadSoftwareUpgradeForGateway = function(gateway, files) {
             // load associated deviceConfig and sensors
@@ -410,7 +407,7 @@ angular.module('upgradeManager.controllers', [])
             error(function(data, status, headers, config) {
 
             });
-        }
+        };
 
 
         // load resources
@@ -429,20 +426,14 @@ angular.module('upgradeManager.controllers', [])
                     loadSoftwareUpgradeForGateway(gw, files);
                 }
             }).
-
             error(function(data, status, headers, config) {
 
             });
         }).
-
         error(function(data, status, headers, config) {
 
         });
 
-
-
-
-
-    }])
+}])
 ;
 

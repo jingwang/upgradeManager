@@ -150,13 +150,17 @@ var initApp = function(app, ssl){
     app.get('/partial/:name', routes.partial);
     if(ssl){
         // let routes.index handle authentication
+        app.get('/dashboard', routes.index);
         app.get('/dashboard/*', routes.index);
+        app.get('/upgrade', routes.index);
         app.get('/upgrade/*', routes.index);
         // redirect all others to the index (HTML5 history)
         app.get('/', routes.index);
 
     } else {
+        app.get('/dashboard', apiAuthentication, routes.index);
         app.get('/dashboard/*', apiAuthentication, routes.index);
+        app.get('/upgrade', apiAuthentication, routes.index);
         app.get('/upgrade/*', apiAuthentication, routes.index);
         // redirect all others to the index (HTML5 history)
         app.get('/', apiAuthentication, routes.index);

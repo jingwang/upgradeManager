@@ -45,16 +45,13 @@ The Upgrade Manager is a web application managing software upgrade for registere
 `$ npm install multer`
 `$ npm install node-schedule`
 `$ npm install node-uuid`
-`$ npm install nools`
 `$ npm install passport`
 `$ npm install passport-local`
 `$ npm install passport-local-mongoose`
 `$ npm install serve-favicon`
 `$ npm install socket.io`
 `$ npm install underscore`
-`$ npm install xml2js`
 `$ npm install xregexp`
-`$ npm install node-cahce`
 `$ npm install winston`
 `$ npm install q`
 `$ npm install chokidar`

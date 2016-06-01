@@ -7,7 +7,7 @@
                 <i ng-show="!gateway.alive" class="fa fa-heart-o fa-fw inactive"></i>
                 Gateway-{{gateway.gatewayId}} : {{gateway.name}} : Current Version : {{gateway.gatewaySoftwareUpgrade.softwareVersion}}
                 <i ng-show="gateway.gatewaySoftwareUpgrade.status == 'CONFIRMED'" class="info fa fa-check fa-fw"></i>
-                <i ng-show="gateway.gatewaySoftwareUpgrade.status == 'PUBLISHED'" class="info fa fa-hourglass-2 fa-fw"></i>
+                <i ng-show="gateway.gatewaySoftwareUpgrade.status == 'PUBLISHED'" class="warning fa fa-hourglass-2 fa-fw"></i>
             </a>
 
 
