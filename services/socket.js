@@ -1,7 +1,5 @@
-var service = require('../services/index.js');
 var eventEmitter = require('../services/event.js').eventEmitter;
 var EVENTS = require('../services/constant.js').EVENTS;
-var _ = require("underscore");
 var logger = require('winston');
 
 // keep track of all connected clients
@@ -25,8 +23,7 @@ var socketOnConnect =  function (socket) {
             socket.broadcast.emit(EVENTS.SOCKET_SOFTWARE_UPGRADE_CONFIRMED, obj);
         });
 
-
-
+    
     // gateway dead
     eventEmitter.removeAllListeners(EVENTS.APP_GATEWAY_DEAD)
         .on(EVENTS.APP_GATEWAY_DEAD, function(gatewayId){
@@ -47,8 +44,6 @@ var socketOnConnect =  function (socket) {
             socket.emit(EVENTS.SOCKET_RESOURCE_ADDED, file);
             socket.broadcast.emit(EVENTS.SOCKET_RESOURCE_ADDED, file);
         });
-
-
 
 
     socket.on('disconnect', function() {

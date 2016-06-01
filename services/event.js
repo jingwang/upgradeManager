@@ -1,3 +1,4 @@
+/** GLOBAL EVENT EMITTER **/
 var events = require('events');
 var eventEmitter = new events.EventEmitter();
 eventEmitter.setMaxListeners(Infinity);
