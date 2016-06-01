@@ -1,49 +1,42 @@
 {
-  "name": "central-platform",
+  "name": "upgrade-manager",
   "version": "1.0.0",
   "license": "MIT",
-  "description": "device monitor application's central data platform",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jingwang/upgradeManager.git"
+  },
+  "description": "Software Upgrade Manager",
   "devDependencies": {
-    "mocha": "2.x.x"
+    "mocha": "^2.5.3"
   },
   "dependencies": {
-    "basic-auth": "latest",
-    "body-parser": "latest",
-    "bytebuffer": "latest",
-    "connect-roles": "latest",
-    "cookie-parser": "latest",
-    "crc": "latest",
-    "crc-32": "latest",
-    "crypto": "latest",
-    "ejs": "latest",
-    "errorhandler": "latest",
-    "express": "latest",
-    "express-session": "latest",
-    "method-override": "latest",
-    "mongoose": "latest",
-    "morgan": "latest",
-    "mosca": "latest",
-    "mqtt": "latest",
-    "multer": "latest",
-    "node-schedule": "latest",
-    "node-uuid": "latest",
-    "nools": "latest",
-    "passport": "latest",
-    "passport-local": "latest",
-    "passport-local-mongoose": "latest",
-    "serve-favicon": "latest",
-    "socket.io": "latest",
-    "underscore": "latest",
-    "xml2js": "latest",
-    "xregexp": "latest",
-    "node-cahce": "latest",
-    "winston": "latest",
-    "q": "latest",
-    "chokidar": "latest"
+    "body-parser": "^1.15.1",
+    "bytebuffer": "^5.0.1",
+    "chokidar": "^1.5.1",
+    "connect-roles": "^3.1.2",
+    "cookie-parser": "^1.4.3",
+    "crc-32": "^0.4.0",
+    "ejs": "^2.4.2",
+    "errorhandler": "^1.4.3",
+    "express": "^4.13.4",
+    "express-session": "^1.13.0",
+    "method-override": "^2.3.6",
+    "mongoose": "^4.4.19",
+    "morgan": "^1.7.0",
+    "mosca": "^1.4.0",
+    "mqtt": "^1.10.0",
+    "multer": "^1.1.0",
+    "node-uuid": "^1.4.7",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^4.0.0",
+    "serve-favicon": "^2.3.0",
+    "socket.io": "^1.4.6",
+    "underscore": "^1.8.3",
+    "winston": "^2.2.0"
   },
-
   "scripts": {
-    "initUser": "node scripts/initUser.js"
+    "initApp": "node scripts/initApp.js"
   }
-
 }

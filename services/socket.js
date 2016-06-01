@@ -23,7 +23,7 @@ var socketOnConnect =  function (socket) {
             socket.broadcast.emit(EVENTS.SOCKET_SOFTWARE_UPGRADE_CONFIRMED, obj);
         });
 
-    
+
     // gateway dead
     eventEmitter.removeAllListeners(EVENTS.APP_GATEWAY_DEAD)
         .on(EVENTS.APP_GATEWAY_DEAD, function(gatewayId){
