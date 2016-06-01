@@ -37,6 +37,8 @@
     "winston": "^2.2.0"
   },
   "scripts": {
-    "initApp": "node scripts/initApp.js"
+    "init-app": "node scripts/initApp.js",
+    "startup": "node app.js",
+    "startup-nossl": "node app.js nossl"
   }
 }

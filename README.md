@@ -16,62 +16,28 @@ The Upgrade Manager is a web application managing software upgrade for registere
 `$ apt-get update`
 `$ apt-get install g++ make mongodb-org libxml2-dev openssh-server tcpdump`
 
-2. download local npm dependencies
-`$ cd /usr/local/src`
-`$ git clone https://github.com/jingwang/mosca.git`
-`$ cd /usr/local/src/mosca`
-`$ npm link`
 
-3. install app
+2. install app
 `$ cd /usr/local/src`
 `$ git clone https://github.com/jingwang/updateManager.git`
 `$ cd updateManager`
-`$ npm install basic-auth`
- `$ npm install body-parser`
-`$ npm install bytebuffer`
-`$ npm install connect-roles`
-`$ npm install cookie-parser`
-`$ npm install crc`
-`$ npm install crc-32`
-`$ npm install crypto`
-`$ npm install ejs`
-`$ npm install errorhandler`
-`$ npm install express`
-`$ npm install express-session`
-`$ npm install method-override`
-`$ npm install mongoose`
-`$ npm install morgan`
-`$ npm install mqtt`
-`$ npm install multer`
-`$ npm install node-schedule`
-`$ npm install node-uuid`
-`$ npm install passport`
-`$ npm install passport-local`
-`$ npm install passport-local-mongoose`
-`$ npm install serve-favicon`
-`$ npm install socket.io`
-`$ npm install underscore`
-`$ npm install xregexp`
-`$ npm install winston`
-`$ npm install q`
-`$ npm install chokidar`
-`$ npm link mosca`
+`$ npm install`
 
-4. config app
+3. config app
 `$ cd /usr/local/src/updateManager`
 `$ mkdir resources`
-`$ node scripts/initApp.js`
+`$ npm run init-app`
 
-5. start up application in ssl mode (i.e., mqtt in ssl, application has user authentication)
+4. start up application in ssl mode (i.e., mqtt in ssl, application has user authentication)
 `$ cd /usr/local/src/updateManager`
-`$ node app.js`
+`$ npm run startup`
 to login:
 username: admin@gushenxing.com
 password: gushenxing123
 
 6. start up application in none-ssl mode (i.e., mqtt not in ssl, application does not have user authentication)
 `$ cd /usr/local/src/updateManager`
-`$ node app.js nossl`
+`$ npm run startup-nossl`
 
 
 # Tools:
