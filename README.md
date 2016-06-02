@@ -49,6 +49,85 @@ $ npm run start-nossl
 ```
 URL: http://localhost:5001
 
+## Message
+
+#### Upgrade 
+
+**Topic**
+UPGRADE
+UPGRADE/$gatewayId
+
+**Description**
+The cloud server send this message to initiate a software upgrade to all gateways (UPGRADE) or a specific gateway (UPGRADE/$gatewayId)
+
+**Direction**
+Cloud to gateway
+
+**Format**
+
+* Header: 12 bytes
+4-byte: int, timestamp
+4-byte: int, payload length
+4-byte: int, payload crc
+
+* Payload
+n-byte: executable file content
+
+#### STATUS
+
+**Topic**
+STATUS/$gatewayId
+
+**Description**
+The gateway send this message to report its current software version and last-upgrade-timestamp
+
+**Direction**
+Gateway to cloud
+
+**Format**
+
+* Header: 12 bytes
+4-byte: int, timestamp
+4-byte: int, payload length
+4-byte: int, payload crc
+
+* Payload
+json string in the following format
+```
+ {
+  version: version, // float, e.g., 1.0
+  timestamp: timestamp // in milli-second
+ }
+```
+
+## Message Flow
+
+* Every time a gateway starts up, it sends a STATUS message to the server to indicate its current status
+* When a gateway receives the UPGRADE message, it performs the software upgrade. Upon success, it sends a STATUS message to report its new status
+* When the server receives the STATUS message from a specific gateway for the first time, it creates the gateway and populates it with the current status
+* When the server detects a new upgrade available, it prompts the user to upgrade
+* Once the server sends out the UPGRADE message, it shows a 'pending' status until it receives the STATUS message from the gateway
+
+## Gateway Simulation
+
+Run the following command to simulate a gateway, once the server is up
+```
+$ node scripts/mqttClientTest.js $gatewayId
+```
+$gatewayId: the gateway id to identify that gateway
+e.g., 
+```
+$ node scripts/mqttClientTest.js 1
+```
+Add `nossl` to run in NONE-SSL mode
+```
+$ node scripts/mqttClientTest.js 1 nossl
+```
+Multiple gateways can be started at the same time to simulate mutiple connections.
+
+The script is implemented so that its original version is always 0.5. It reads the fake content of the executable (which is the version number) and uses that as the new version. This should be changed in production.
+
+
 ## Tools
 
 #### to backup db:
