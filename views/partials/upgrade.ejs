@@ -16,11 +16,16 @@
 
                     </a>
 
-                    <i ng-show="gateway.gatewaySoftwareUpgrade.status == 'CONFIRMED'" class="info fa fa-check fa-fw"></i>
-                    <i ng-show="gateway.gatewaySoftwareUpgrade.status == 'PUBLISHED'" class="warning fa fa-hourglass-2 fa-fw"></i>
+                    <i ng-show="gateway.gatewaySoftwareUpgrade.status == 'CONFIRMED'"
+                       tooltip-placement="top" uib-tooltip="Confirmed"
+                       class="info fa fa-check fa-fw"></i>
+                    <i ng-show="gateway.gatewaySoftwareUpgrade.status == 'PUBLISHED'"
+                       tooltip-placement="top" uib-tooltip="Deployed"
+                       class="warning fa fa-hourglass-2 fa-fw"></i>
 
-                    <i ng-show="gateway.newVersion" class="notice fa fa-download fa-fw">
-                    </i>
+                    <i ng-show="gateway.newVersion"
+                       tooltip-placement="top" uib-tooltip="New version available"
+                       class="notice fa fa-download fa-fw"></i>
 
             <span class="pull-right">
                 <label>Select version</label>
