@@ -41,7 +41,35 @@ var onAppStart =  function (ssl) {
         client = mqtt.createClient(configuration.mqttPort, configuration.mqttHost, optionsNoSsl);
     }
 
-    // listen to event to publish REQUEST message
+    // helper functions
+    var publishLatestVersion = function(client, gatewayId){
+        var files = service.getResourcesSync();
+        var version = '';
+        if(files && files.length){
+            version = files[0];
+        }
+
+        var messageObj = new MessageObject(new Date(), JSON.stringify({
+            version: version
+        }));
+
+        var messageBuffer = messageObj.toBuffer();
+        if(gatewayId){
+            client.publish(TOPICS.TOGATEWAY_LATEST_VERSION + '/' + gatewayId, messageBuffer, {qos: 1});
+        } else {
+            client.publish(TOPICS.TOGATEWAY_LATEST_VERSION, messageBuffer, {qos: 1});
+        }
+
+    }
+
+    // listen to event to publish TOGATEWAY message
+
+    eventEmitter.removeAllListeners(EVENTS.APP_PUBLISH_LATEST_VERSION)
+        .on(EVENTS.APP_PUBLISH_LATEST_VERSION, function(file){
+            publishLatestVersion(client);
+        });
+
+
     eventEmitter.removeAllListeners(EVENTS.APP_DEPLOY_SOFTWARE_UPGRADE)
         .on(EVENTS.APP_DEPLOY_SOFTWARE_UPGRADE, function(obj){
             var gatewayIds = obj.gatewayIds; // a list of gatewayIds or null to indicate all gateways
@@ -49,7 +77,6 @@ var onAppStart =  function (ssl) {
 
             //TODO: construct executablePath and read executable
             fs.readFile(resourcesPath + '/' + softwareVersion, function(err, data){
-
                 if(data){
                     var content = data.toString();
                     var msgObj = new MessageObject(new Date(), content);
@@ -57,7 +84,7 @@ var onAppStart =  function (ssl) {
 
                     // upgrade all gateways
                     if(!gatewayIds){
-                        client.publish(TOPICS.UPGRADE, messageBuffer, {qos: 1});
+                        client.publish(TOPICS.TOGATEWAY_UPGRADE, messageBuffer, {qos: 1});
                         service.getGatewaySoftwareUpgrades(function(objs){
                             if(objs){
                                 for(var i = 0; i < objs.length; i++){
@@ -81,7 +108,7 @@ var onAppStart =  function (ssl) {
                     else {
                         for(var i = 0; i < gatewayIds.length; i++){
                             var gatewayId = gatewayIds[i]
-                            client.publish(TOPICS.UPGRADE + '/' + gatewayIds[i], messageBuffer, {qos: 1});
+                            client.publish(TOPICS.TOGATEWAY_UPGRADE + '/' + gatewayIds[i], messageBuffer, {qos: 1});
 
                             var gsu = {
                                 gatewayId: gatewayId,
@@ -107,23 +134,27 @@ var onAppStart =  function (ssl) {
         });
 
 
-    // subscribe to all RESPONSE messages
+    // subscribe to all TOCLOUD messages
     client.on('connect', function () {
-        // matching STATUS/[gatewayId]
-        client.subscribe(TOPICS.STATUS + '/+');
+        // subscribe to all TOCLOUD topics
+        client.subscribe(TOPICS.TOCLOUD_STATUS + '/+');
+        client.subscribe(TOPICS.TOCLOUD_REQUEST_LATEST_VERSION + '/+');
+        client.subscribe(TOPICS.TOCLOUD_REQUEST_UPGRADE + '/+');
+
     });
 
 
     client.on('message', function (topic, message) {
+        logger.debug('received topic: ' + topic);
         // message is Buffer
         var topicName, gatewayId;
         var topicSections = topic.split('/');
-        if(topicSections.length == 2){
-            topicName = topicSections[0];
-            gatewayId = topicSections[1];
+        if(topicSections.length == 3){
+            topicName = topicSections[0] + '/' + topicSections[1];
+            gatewayId = topicSections[2];
         }
 
-        if(topicName == TOPICS.STATUS && gatewayId != undefined) {
+        if(topicName == TOPICS.TOCLOUD_STATUS && gatewayId != undefined) {
             var receivedObj = new MessageObject();
             receivedObj.fromBuffer(message);
             var statusJson = receivedObj.getPayloadJson();
@@ -171,6 +202,32 @@ var onAppStart =  function (ssl) {
                     });
                 });
             }
+        }
+        else if(topicName == TOPICS.TOCLOUD_REQUEST_LATEST_VERSION && gatewayId != undefined){
+            publishLatestVersion(client, gatewayId);
+        }
+        else if(topicName == TOPICS.TOCLOUD_REQUEST_UPGRADE && gatewayId != undefined){
+
+            var receivedObj = new MessageObject();
+            receivedObj.fromBuffer(message);
+            var requestJson = receivedObj.getPayloadJson();
+            if(requestJson){
+                var version = requestJson.version;
+                //TODO: construct executablePath and read executable
+                fs.readFile(resourcesPath + '/' + version, function(err, data){
+                    if(err){
+                        logger.debug(err);
+                    }
+                    if(data){
+                        var content = data.toString();
+                        var msgObj = new MessageObject(new Date(), content);
+                        var messageBuffer = msgObj.toBuffer();
+                        client.publish(TOPICS.TOGATEWAY_DOWNLOAD_UPGRADE + '/' + gatewayId, messageBuffer, {qos: 1});
+
+                    }
+                })
+            }
+
         }
 
         //    client.end();

@@ -60,36 +60,81 @@ if(ssl) {
 
 client.on('connect', function () {
 
-    var msgObj = new MessageObject(new Date(), JSON.stringify({
+    var statusObj = new MessageObject(new Date(), JSON.stringify({
         companyId: companyId,
         version: '0.5',
         timestamp: new Date().getTime()
     }));
 
-    client.publish(TOPICS.STATUS + '/' + clientId, msgObj.toBuffer());
-    client.subscribe(TOPICS.UPGRADE + '/' + clientId, {qos: 1});
-    client.subscribe(TOPICS.UPGRADE, {qos: 1});
+    var requestLatestObj = new MessageObject(new Date(), ' ');
+
+    // send status at startup
+    client.publish(TOPICS.TOCLOUD_STATUS + '/' + clientId, statusObj.toBuffer());
+    // send request for latest version at startup
+    client.publish(TOPICS.TOCLOUD_REQUEST_LATEST_VERSION + '/' + clientId, requestLatestObj.toBuffer());
+
+    client.subscribe(TOPICS.TOGATEWAY_UPGRADE + '/' + clientId, {qos: 1});
+    client.subscribe(TOPICS.TOGATEWAY_UPGRADE, {qos: 1});
+    client.subscribe(TOPICS.TOGATEWAY_LATEST_VERSION + '/' + clientId, {qos: 1});
+    client.subscribe(TOPICS.TOGATEWAY_LATEST_VERSION, {qos: 1});
+    client.subscribe(TOPICS.TOGATEWAY_DOWNLOAD_UPGRADE + '/' + clientId, {qos: 1});
+    client.subscribe(TOPICS.TOGATEWAY_DOWNLOAD_UPGRADE, {qos: 1});
+
+    // simulate sending request for latest version every minute
+    setInterval(function(){
+        client.publish(TOPICS.TOCLOUD_REQUEST_LATEST_VERSION + '/' + clientId, requestLatestObj.toBuffer());
+
+    }, 60000);
 
 });
 
 
 client.on('message', function (topic, message) {
     console.log(topic);
+    var topicName;
+    var topicSections = topic.split('/');
+    if(topicSections.length > 1){
+        topicName = topicSections[0] + '/' + topicSections[1];
+    }
 
-    var receivedObj = new MessageObject();
-    receivedObj.fromBuffer(message);
-    var newVersion = receivedObj.getPayload();
+    if(topicName == TOPICS.TOGATEWAY_UPGRADE) {
+        var receivedObj = new MessageObject();
+        receivedObj.fromBuffer(message);
+        var newVersion = receivedObj.getPayload();
 
-    setTimeout(function(){
-        var obj = new MessageObject(new Date(), JSON.stringify({
-            companyId: companyId,
-            version: newVersion?newVersion.trim():'0.5',
-            timestamp: new Date().getTime()
-        }));
+        setTimeout(function(){
+            var obj = new MessageObject(new Date(), JSON.stringify({
+                companyId: companyId,
+                version: newVersion?newVersion.trim():'0.5',
+                timestamp: new Date().getTime()
+            }));
 
-        client.publish(TOPICS.STATUS + '/' + clientId, obj.toBuffer());
+            client.publish(TOPICS.TOCLOUD_STATUS + '/' + clientId, obj.toBuffer());
 
-    }, 10000);
+        }, 10000);
+    }
+
+    else if(topicName == TOPICS.TOGATEWAY_LATEST_VERSION) {
+        var receivedObj = new MessageObject();
+        receivedObj.fromBuffer(message);
+        var json = receivedObj.getPayloadJson();
+        if(json){
+            var version = json.version;
+            console.log('Latest version: ' + version);
+
+            // simulate request download
+            var obj = new MessageObject(new Date(), JSON.stringify({
+                version: version,
+            }));
+
+            client.publish(TOPICS.TOCLOUD_REQUEST_UPGRADE + '/' + clientId, obj.toBuffer());
+        }
+    }
+
+    else if(topicName == TOPICS.TOGATEWAY_DOWNLOAD_UPGRADE) {
+        console.log('New version downloaded');
+    }
+
 
 });
 

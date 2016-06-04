@@ -55,8 +55,9 @@ URL: http://localhost:5001
 
 **Topic**
 
-UPGRADE
-UPGRADE/$gatewayId
+TOGATEWAY_UPGRADE
+
+TOGATEWAY_UPGRADE/$gatewayId
 
 **Description**
 
@@ -78,11 +79,74 @@ Cloud to gateway
 
 n-byte: executable file content
 
+
+#### Latest Version 
+
+**Topic**
+
+TOGATEWAY_LATEST_VERSION
+
+TOGATEWAY_LATEST_VERSION/$gatewayId
+
+**Description**
+
+The cloud server send this message to inform the latest available software version to all gateways (UPGRADE) or a specific gateway (UPGRADE/$gatewayId)
+
+**Direction**
+
+Cloud to gateway
+
+**Format**
+
+* Header: 12 bytes
+
+4-byte: int, timestamp
+4-byte: int, payload length
+4-byte: int, payload crc
+
+* Payload
+
+json string in the following format
+```
+ {
+  version: version, // float, e.g., 1.0
+ }
+```
+
+#### Download Upgrade 
+
+**Topic**
+
+TOGATEWAY_DOWNLOAD_UPGRADE
+
+TOGATEWAY_DOWNLOAD_UPGRADE/$gatewayId
+
+**Description**
+
+The cloud server send this message to transfer the content of the requested version of software upgrade to all gateways (UPGRADE) or a specific gateway (UPGRADE/$gatewayId)
+
+**Direction**
+
+Cloud to gateway
+
+**Format**
+
+* Header: 12 bytes
+
+4-byte: int, timestamp
+4-byte: int, payload length
+4-byte: int, payload crc
+
+* Payload
+
+n-byte: executable file content
+
+
 #### Status
 
 **Topic**
 
-STATUS/$gatewayId
+TOCLOUD_STATUS/$gatewayId
 
 **Description**
 
@@ -111,13 +175,76 @@ json string in the following format
  }
 ```
 
+#### Request Latest Version
+
+**Topic**
+
+TOCLOUD_REQUEST_LATEST_VERSION/$gatewayId
+
+**Description**
+
+The gateway send this message to request the latest available software version
+
+**Direction**
+
+Gateway to cloud
+
+**Format**
+
+* Header: 12 bytes
+
+4-byte: int, timestamp
+4-byte: int, payload length
+4-byte: int, payload crc
+
+* Payload
+
+empty
+
+#### Request Upgrade
+
+**Topic**
+
+TOCLOUD_REQUEST_UPGRADE/$gatewayId
+
+**Description**
+
+The gateway send this message to request the content of a specific version of software upgrade
+
+**Direction**
+
+Gateway to cloud
+
+**Format**
+
+* Header: 12 bytes
+
+4-byte: int, timestamp
+4-byte: int, payload length
+4-byte: int, payload crc
+
+* Payload
+
+json string in the following format
+```
+ {
+  version: version, // float, e.g., 1.0
+ }
+```
+
+
 ## Message Flow
 
-* Every time a gateway starts up, it sends a STATUS message to the server to indicate its current status
-* When a gateway receives the UPGRADE message, it performs the software upgrade. Upon success, it sends a STATUS message to report its new status
-* When the server receives the STATUS message from a specific gateway for the first time, it creates the company (if not not exist) and gateway, and updates the gateway with the current status
-* When the server detects a new upgrade available, it prompts the user to upgrade
-* Once the server sends out the UPGRADE message, it shows a 'pending' status until it receives the STATUS message from the gateway
+* Every time a gateway starts up, it sends a "Status" message to the server to indicate its current status
+* Every time a gateway starts up, it sends a "Request Latest Version" message to the server to request the latest available software version
+* When a gateway receives the "Upgrade" message, it performs the software upgrade. Upon success, it sends a "Status" message to report its new status
+* A gateway sends the "Request Upgrade" message to request the content of a specific upgrade
+* When the server receives the "Status" message from a specific gateway for the first time, it creates the company (if not not exist) and gateway, and updates the gateway with the current status
+* When the server detects a new upgrade available, it prompts the user with a new upgrade, and sends a "Latest Version" message to all gateways to indicate new version available
+* When the server receives the "Request Latest Version" message, it sends a "Latest Version" message to all gateways to indicate new version available
+* When the server receives the "Request Upgrade" message, it sends a "Download Upgrade" message to deliver the content of the requested upgrade
+* Once the server sends out the "Upgrade" message, it shows a 'pending' status until it receives the "Status" message from the gateway
+* Note: if the gateway receives a "Upgrade" message, it should perform the upgrade right away; if the gateway receives a "Download Upgrade" message, it does not need to perform the upgrade right away - it can choose to save the content and perform the upgrade later
 
 ## Gateway Simulation
 

@@ -17,6 +17,7 @@ var onAppStart =  function () {
         if(file == parseFloat(file)){
             logger.debug('File', file, 'has been added');
             eventEmitter.emit(EVENTS.APP_RESOURCE_ADDED, file);
+            eventEmitter.emit(EVENTS.APP_PUBLISH_LATEST_VERSION, file);
         }
     };
 

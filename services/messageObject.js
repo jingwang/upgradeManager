@@ -7,20 +7,40 @@ var logger = require('winston');
 
 /**
  * Message Format
+ *
  * 1) Header: 12 bytes
  * 4 bytes: int timestamp
  * 4 bytes: int payloadLength
  * 4 bytes: int payloadCrc
  *
  * 2) Payload:
- * TOPIC: UPGRADE, UPGRADE/[gatewayId] (cloud to gateway)
- * n bytes data (executables)
- * TOPIC: STATUS, STATUS/[gatewayId] (gateway to cloud)
- * {
- *  companyId: gateway's company id
- *  version: version,
- *  timestamp: timestamp // in milli-second
+ *
+ * TOPIC: TOGATEWAY_UPGRADE, TOGATEWAY_UPGRADE/[gatewayId] (cloud to gateway)
+ *  n bytes data (executables)
+ *
+ * TOPIC: TOGATEWAY_LATEST_VERSION, TOGATEWAY_LATEST_VERSION/[gatewayId] (cloud to gateway)
+ *  {
+ *   version: version,
  *  }
+ *
+ * TOPIC: TOGATEWAY_DOWNLOAD_UPGRADE, TOGATEWAY_DOWNLOAD_UPGRADE/[gatewayId] (cloud to gateway)
+ *  n bytes data (executables)
+ *
+ * TOPIC: TOCLOUD_STATUS/[gatewayId] (gateway to cloud)
+ *  {
+ *   companyId: gateway's company id
+ *   version: version,
+ *   timestamp: timestamp // in milli-second
+ *  }
+ *
+ * TOPIC: TOCLOUD_REQUEST_LATEST_VERSION/[gatewayId] (gateway to cloud)
+ *   empty
+ *
+ * TOPIC: TOCLOUD_REQUEST_UPGRADE/[gatewayId] (gateway to cloud)
+ *  {
+ *   version: version,
+ *  }
+ *
  */
 
 
