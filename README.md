@@ -54,44 +54,54 @@ URL: http://localhost:5001
 #### Upgrade 
 
 **Topic**
+
 UPGRADE
 UPGRADE/$gatewayId
 
 **Description**
+
 The cloud server send this message to initiate a software upgrade to all gateways (UPGRADE) or a specific gateway (UPGRADE/$gatewayId)
 
 **Direction**
+
 Cloud to gateway
 
 **Format**
 
 * Header: 12 bytes
+
 4-byte: int, timestamp
 4-byte: int, payload length
 4-byte: int, payload crc
 
 * Payload
+
 n-byte: executable file content
 
 #### Status
 
 **Topic**
+
 STATUS/$gatewayId
 
 **Description**
+
 The gateway send this message to report its current software version and last-upgrade-timestamp
 
 **Direction**
+
 Gateway to cloud
 
 **Format**
 
 * Header: 12 bytes
+
 4-byte: int, timestamp
 4-byte: int, payload length
 4-byte: int, payload crc
 
 * Payload
+
 json string in the following format
 ```
  {
@@ -144,6 +154,7 @@ $ mongorestore mongodump
 ```
 
 #### to enable mqtt over tls, choose either METHOD 1 or METHOD 2.
+
 * Note that the project contains all necessary files. The following instructions are for reference purpose.
 * Note that for either method to work, you will need map your server's ip to the following domain name in your hosts file:
 your_server_ip  mqtt.gushenxing.com
@@ -160,16 +171,19 @@ $ openssl req -x509 -days 365 -key key.pem -in csr.pem -out certificate.pem
 **On the server**
 
 * Distribute the following files to the ssl folder:
+
 key.perm
 certificate.pem
 
 * Start broker with the following options:
+
 keyPath: $path_to_key.perm
 certPath: $path_to_certificate.pem
 
 **On the client**
 
 * Connect to the mqtt.gushenxing.com (with self-signed certificate) with the following options:
+
 username: (get username from config.js),
 password: (get username from config.js),
 rejectUnauthorized: false
@@ -210,6 +224,7 @@ $ openssl rsa -in mqtt.gushenxing.com.server.key -out mqtt.gushenxing.com.server
 **On the server**
 
 * Distribute the following files to ssl folder:
+
 mqtt.gushenxing.com.server.unencripted.key
 mqtt.gushenxing.com.server.crt
 
@@ -222,11 +237,13 @@ mqtt.gushenxing.com.server.crt
 **On the Client**
 
 * Distribute the following file:
+
 mqtt.gushenxing.com.ca.crt
 
 * This file will be used to check at connection if the server certificate is valid.
 
 * Connect to the mqtt.gushenxing.com broker with the following options:
+
 username: $username_from_config.js,
 password: $username_from_config.js,
 caPaths: [$path_to_mqtt.gushenxing.com.ca.crt]
