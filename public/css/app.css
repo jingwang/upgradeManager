@@ -186,6 +186,13 @@ a.navbar-brand.navbar-second:hover {
     border: none;
 }
 
+.panel-header-form-control {
+    display: inline-block;
+    width: 150px;
+    margin-right: 20px;
+    height:26px;
+}
+
 
 /* baidu map */
 .map-canvas {
@@ -213,6 +220,10 @@ a.navbar-brand.navbar-second:hover {
 
 .fa.warning {
     color: orange;
+}
+
+.fa.notice {
+    color: #337ab7;
 }
 
 .fa .inactive {

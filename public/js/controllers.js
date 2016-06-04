@@ -210,7 +210,7 @@ angular.module('upgradeManager.controllers', [])
     $scope.ok = function () {
         $http({method: 'POST', url: '/api/gatewaySoftwareUpgrade', data: {
             gatewayIds: [$scope.gateway.gatewayId],
-            softwareVersion: $scope.gateway.newVersion
+            softwareVersion: $scope.gateway.selectedVersion
         }}).
         success(function(data, status, headers, config) {
             $uibModalInstance.close();
@@ -387,6 +387,7 @@ angular.module('upgradeManager.controllers', [])
             $http({method: 'GET', url: '/api/gatewaySoftwareUpgrade/gatewayId/' + gateway.gatewayId}).
             success(function(data, status, headers, config) {
                 gateway.gatewaySoftwareUpgrade = data.data;
+                gateway.selectedVersion = files?files[0]:'';
                 if(files){
                     for(var j = 0; j < files.length; j++){
                         var file = files[j];
@@ -396,6 +397,7 @@ angular.module('upgradeManager.controllers', [])
                         }
                     }
                 }
+                console.log(gateway);
                 refreshEventLog(gateway);
             }).
             error(function(data, status, headers, config) {
@@ -413,6 +415,10 @@ angular.module('upgradeManager.controllers', [])
 
         socket.on(events.resourceAdded, function (file) {
             updateGatewayNewVersion(file);
+        });
+
+        socket.on(events.resourceUpdated, function (files) {
+            $scope.files = files;
         });
 
         socket.on(events.upgradePublished, function (obj) {
@@ -433,8 +439,8 @@ angular.module('upgradeManager.controllers', [])
         $http({method: 'GET', url: '/api/resources'}).
         success(function(data, status, headers, config) {
             // files is sorted desc
-            var files = data.data;
-            console.log(files);
+            $scope.files = data.data;
+            console.log($scope.files);
 
             // load companies
             $http({method: 'GET', url: '/api/companyAndGateway'}).
@@ -449,7 +455,8 @@ angular.module('upgradeManager.controllers', [])
                     for(var i = 0; i < company.gateways.length; i++){
                         var gw = company.gateways[i];
                         gw.alive = localStorageService.get(gw.gatewayId);
-                        loadSoftwareUpgradeForGateway(gw, files);
+
+                        loadSoftwareUpgradeForGateway(gw, $scope.files);
                     }
 
                 }

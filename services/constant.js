@@ -20,6 +20,9 @@ exports.EVENTS = {
     APP_RESOURCE_ADDED: 'app:resource-added',
     SOCKET_RESOURCE_ADDED: 'socket:resource-added',
 
+    APP_RESOURCE_UPDATED: 'app:resource-updated',
+    SOCKET_RESOURCE_UPDATED: 'socket:resource-updated',
+
     APP_EVENT_LOG: 'app:event-log',
 
     EVENT_LOG_USER_CREATED: 'eventlog:user-created',

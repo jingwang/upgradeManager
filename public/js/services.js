@@ -169,6 +169,7 @@ angular.module('upgradeManager.services', []).
         gatewayAlive: 'socket:gateway-alive',
         gatewayDead: 'socket:gateway-dead',
         resourceAdded: 'socket:resource-added',
+        resourceUpdated: 'socket:resource-updated',
         upgradePublished: 'socket:software-upgrade-published',
         upgradeConfirmed: 'socket:software-upgrade-confirmed',
         eventLogSoftwareDeployed: 'eventlog:software-deployed'

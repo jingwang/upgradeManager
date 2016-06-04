@@ -500,7 +500,24 @@ exports.getResources = function(callback, errCallback) {
 };
 
 
-
+exports.getResourcesSync = function(){
+    var resourcesPath = configuration.resourcesPath;
+    var files = fs.readdirSync(resourcesPath);
+    var resources = [];
+    if(files){
+        for(var i = 0; i < files.length; i++){
+            var file = files[i];
+            // only pick files in the format of a float (e.g., 1.0, 1.1)
+            if(file == parseFloat(file)){
+                resources.push(file);
+            }
+        }
+    }
+    resources.sort(function(a, b) {
+        return parseFloat(b) - parseFloat(a);
+    });
+    return resources;
+}
 
 
 

@@ -45,6 +45,13 @@ var socketOnConnect =  function (socket) {
             socket.broadcast.emit(EVENTS.SOCKET_RESOURCE_ADDED, file);
         });
 
+    // resources updated
+    eventEmitter.removeAllListeners(EVENTS.APP_RESOURCE_UPDATED)
+        .on(EVENTS.APP_RESOURCE_UPDATED, function(files){
+            socket.emit(EVENTS.SOCKET_RESOURCE_UPDATED, files);
+            socket.broadcast.emit(EVENTS.SOCKET_RESOURCE_UPDATED, files);
+        });
+
 
     socket.on('disconnect', function() {
         logger.info('>>>> socket disconnect, deleting object socket.id: ' + socket.id);
