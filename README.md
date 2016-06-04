@@ -73,7 +73,7 @@ Cloud to gateway
 * Payload
 n-byte: executable file content
 
-#### STATUS
+#### Status
 
 **Topic**
 STATUS/$gatewayId
