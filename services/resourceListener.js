@@ -27,9 +27,7 @@ var onAppStart =  function () {
             logger.debug('Resources have changed');
             eventEmitter.emit(EVENTS.APP_RESOURCE_UPDATED, files);
         }
-    }
-
-
+    };
 
     // capture events if a file is added/removed from the folder
     watcher.on('add', function(path) {

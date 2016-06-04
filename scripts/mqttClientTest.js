@@ -19,8 +19,6 @@ if(process.argv.length == 4){
     }
 }
 
-
-
 if(clientId == undefined){
     console.log('clientId cannot be undefined');
     process.exit(0);

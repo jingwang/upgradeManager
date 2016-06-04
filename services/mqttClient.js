@@ -60,7 +60,7 @@ var onAppStart =  function (ssl) {
             client.publish(TOPICS.TOGATEWAY_LATEST_VERSION, messageBuffer, {qos: 1});
         }
 
-    }
+    };
 
     // listen to event to publish TOGATEWAY message
 
@@ -107,7 +107,7 @@ var onAppStart =  function (ssl) {
                     // upgrade specific gateway(s)
                     else {
                         for(var i = 0; i < gatewayIds.length; i++){
-                            var gatewayId = gatewayIds[i]
+                            var gatewayId = gatewayIds[i];
                             client.publish(TOPICS.TOGATEWAY_UPGRADE + '/' + gatewayIds[i], messageBuffer, {qos: 1});
 
                             var gsu = {
@@ -172,7 +172,7 @@ var onAppStart =  function (ssl) {
                             logger.debug('new company created with companyId: ' + companyId);
                         })
                     }
-                })
+                });
 
 
                 // if gateway does not exist, create one in gateway collection
@@ -187,7 +187,7 @@ var onAppStart =  function (ssl) {
                             logger.debug('new gateway created with gatewayId: ' + gatewayId);
                         })
                     }
-                })
+                });
 
                 var gsu = {
                     gatewayId: gatewayId,
