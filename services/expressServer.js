@@ -168,27 +168,34 @@ var initApp = function(app, ssl){
 
     // --JSON API--
 
+    // company
+    app.get('/api/company', apiAuthentication, api.getCompanies);
+    app.get('/api/company/companyId/:companyId', apiAuthentication, api.getCompanyByCompanyId);
+    app.post('/api/company', apiAuthentication, api.saveCompany); // save or create a company
 
-    // station
+    // gateway
     app.get('/api/gateway', apiAuthentication, api.getGateways);
     app.get('/api/gateway/gatewayId/:gatewayId', apiAuthentication, api.getGatewayByGatewayId);
-    app.post('/api/gateway', apiAuthentication, api.saveGateway); // save or create a single station
+    app.post('/api/gateway', apiAuthentication, api.saveGateway); // save or create a gateway
 
-// user authorization
+    // company + gateway
+    app.get('/api/companyAndGateway', apiAuthentication, api.getCompanyAndGateways);
+
+    // user authorization
     app.get('/api/isAuthorized/:page', apiAuthentication, api.isAuthorized);
 
-// user
+    // user
     app.get('/api/user/:username', apiAuthentication, api.getUser);
     app.get('/api/user', apiAuthentication, api.getUsers);
     app.post('/api/user', apiAuthentication, api.createUser);
     app.post('/api/user/update', apiAuthentication, api.updateUserProfile);
     app.post('/api/users/update', apiAuthentication, api.updateUserProfiles);
 
-// validation
+    // validation
     app.post('/api/validate/username', apiAuthentication, api.validateUsername);
 
 
-// station software upgrade
+    // station software upgrade
     app.get('/api/gatewaySoftwareUpgrade', apiAuthentication, api.getGatewaySoftwareUpgrades);
     app.get('/api/gatewaySoftwareUpgrade/gatewayId/:gatewayId', apiAuthentication, api.getGatewaySoftwareUpgradeByGatewayId);
     app.post('/api/gatewaySoftwareUpgrade', apiAuthentication, api.deployGatewaySoftwareUpgrade); // create or update

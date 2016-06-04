@@ -1,17 +1,20 @@
-if(process.argv.length < 3){
+if(process.argv.length < 4){
     console.log('Usage:');
-    console.log('node mqttClientTest.js clientId [nossl]');
+    console.log('node mqttClientTest.js gatewayId companyId [nossl]');
     process.exit(0);
 }
 
 var ssl = true;
 var clientId;
+var companyId;
 
-if(process.argv.length == 3){
+if(process.argv.length == 4){
     clientId = process.argv[2];
+    companyId = process.argv[3];
 } else {
     clientId = process.argv[2];
-    if(process.argv[3] == 'nossl'){
+    companyId = process.argv[3];
+    if(process.argv[4] == 'nossl'){
         ssl = false;
     }
 }
@@ -58,6 +61,7 @@ if(ssl) {
 client.on('connect', function () {
 
     var msgObj = new MessageObject(new Date(), JSON.stringify({
+        companyId: companyId,
         version: '0.5',
         timestamp: new Date().getTime()
     }));
@@ -78,6 +82,7 @@ client.on('message', function (topic, message) {
 
     setTimeout(function(){
         var obj = new MessageObject(new Date(), JSON.stringify({
+            companyId: companyId,
             version: newVersion?newVersion.trim():'0.5',
             timestamp: new Date().getTime()
         }));

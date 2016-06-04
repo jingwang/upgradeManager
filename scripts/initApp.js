@@ -11,6 +11,7 @@ require('../collections/user.js');
 require('../collections/gateway.js');
 require('../collections/gatewaySoftwareUpgrade.js');
 require('../collections/eventLog.js');
+require('../collections/company.js');
 
 
 var User = mongoose.model('User');
@@ -45,6 +46,10 @@ promise.then(function () {
 
 }).then(function () {
     console.log('Removed EventLog');
+    return mongoose.model('Company').remove({}).exec();
+
+}).then(function () {
+    console.log('Removed Company');
     return mongoose.model('GatewaySoftwareUpgrade').remove({}).exec();
 
 }).then(function () {

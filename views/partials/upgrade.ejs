@@ -1,14 +1,21 @@
 <div class="partial-content">
-
-    <div ng-repeat="gateway in gateways" ng-init="gatewayIndex=$index" class="panel panel-default">
+    <div ng-repeat="company in companies" class="panel panel-default">
         <div class="panel-heading">
-            <a href="" ng-click="gateway.isCollapsed = !gateway.isCollapsed">
-                <i ng-show="gateway.alive" class="fa fa-heartbeat fa-fw info"></i>
-                <i ng-show="!gateway.alive" class="fa fa-heart-o fa-fw inactive"></i>
-                Gateway-{{gateway.gatewayId}} : {{gateway.name}} : Current Version : {{gateway.gatewaySoftwareUpgrade.softwareVersion}}
-                <i ng-show="gateway.gatewaySoftwareUpgrade.status == 'CONFIRMED'" class="info fa fa-check fa-fw"></i>
-                <i ng-show="gateway.gatewaySoftwareUpgrade.status == 'PUBLISHED'" class="warning fa fa-hourglass-2 fa-fw"></i>
+            <a href="" ng-click="company.isCollapsed = !company.isCollapsed">
+                Company-{{company.companyId}} : {{company.name}}
             </a>
+        </div>
+
+        <div ng-show="company.isCollapsed"  class="panel-body">
+            <div ng-repeat="gateway in company.gateways" ng-init="gatewayIndex=$index" class="panel panel-default">
+                <div class="panel-heading">
+                    <a href="" ng-click="gateway.isCollapsed = !gateway.isCollapsed">
+                        <i ng-show="gateway.alive" class="fa fa-heartbeat fa-fw info"></i>
+                        <i ng-show="!gateway.alive" class="fa fa-heart-o fa-fw inactive"></i>
+                        Gateway-{{gateway.gatewayId}} : {{gateway.name}} : Current Version : {{gateway.gatewaySoftwareUpgrade.softwareVersion}}
+                        <i ng-show="gateway.gatewaySoftwareUpgrade.status == 'CONFIRMED'" class="info fa fa-check fa-fw"></i>
+                        <i ng-show="gateway.gatewaySoftwareUpgrade.status == 'PUBLISHED'" class="warning fa fa-hourglass-2 fa-fw"></i>
+                    </a>
 
 
             <span class="pull-right">
@@ -25,21 +32,34 @@
                 </button>
 
             </span>
-        </div>
-        <div ng-show="gateway.isCollapsed" class="panel-body">
-            <div ng-show="gateway.logs" class="list-group">
-                <div ng-repeat="log in gateway.logs" class="list-group-item">
-                    {{'label.version' | translate }}: {{log.content}}
+                </div>
+                <div ng-show="gateway.isCollapsed" class="panel-body">
+                    <div ng-show="gateway.logs" class="list-group">
+                        <div ng-repeat="log in gateway.logs" class="list-group-item">
+                            {{'label.version' | translate }}: {{log.content}}
                     <span class="pull-right text-muted small">
                         <em>{{log.username}} @ {{log.timestamp | date:"yyyy-MM-dd hh:mm:ss"}}</em>
                     </span>
+                        </div>
+
+                    </div>
+
                 </div>
 
             </div>
-
         </div>
-
     </div>
+
+
+
+
+
+
+
+
+
+
+
 
 
 

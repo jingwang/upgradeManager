@@ -7,17 +7,71 @@ var _ = require("underscore");
 var logger = require('winston');
 
 function constructEventLogQuery(req){
-    var username = req.query.username?req.query.username:null;
-    var gatewayId = req.query.gatewayId?req.query.gatewayId:null;
-    var event = req.query.event?req.query.event:null;
+    var query = {};
+    if(req.query){
+        var username = req.query.username?req.query.username:null;
+        var gatewayId = req.query.gatewayId?req.query.gatewayId:null;
+        var event = req.query.event?req.query.event:null;
 
-    var query = {
-        username: username,
-        gatewayId: gatewayId,
-        event: event
-    };
+        query = {
+            username: username,
+            gatewayId: gatewayId,
+            event: event
+        };
+    }
 
     return query;
+};
+
+function constructGatewayQuery(req){
+    var query = {};
+    if(req.query){
+        var companyId = req.query.companyId?req.query.companyId:null;
+        query = {
+            companyId: companyId
+        };
+    }
+    return query;
+};
+
+// company
+exports.getCompanyByCompanyId = function (req, res) {
+    var companyId = req.params.companyId;
+    service.getCompanyByCompanyId(companyId, function(c){
+        res.json({
+            data: c
+        });
+    }, function(err){
+        logger.error(err);
+        res.status(500).send(err);
+    })
+};
+
+
+exports.getCompanies = function (req, res) {
+
+    service.getCompanies(function(cs){
+        res.json({
+            data: cs
+        });
+    }, function(err){
+        logger.error(err);
+        res.status(500).send(err);
+    })
+};
+
+exports.saveCompany = function (req, res) {
+    var company = req.body;
+    service.saveCompany(company, function(c){
+        res.json({
+            data: c
+        });
+
+    }, function(err){
+        logger.error(err);
+        res.status(500).send(err);
+    })
+
 };
 
 
@@ -37,7 +91,8 @@ exports.getGatewayByGatewayId = function (req, res) {
 
 
 exports.getGateways = function (req, res) {
-    service.getGateways(function(gateways){
+    var query = constructGatewayQuery(req);
+    service.getGateways(query, function(gateways){
         res.json({
             data: gateways
         });
@@ -71,7 +126,41 @@ exports.saveGateway = function (req, res) {
 
 };
 
+// company and gateway
+exports.getCompanyAndGateways = function(req, res) {
+    var results = [];
+    service.getCompanies(function(companies){
+        if(companies && companies.length){
+            service.getGateways({}, function(gateways){
+                for(var i = 0; i < companies.length; i++){
+                    var company = companies[i];
+                    company.gateways = [];
+                    for(var j = 0; j < gateways.length; j++){
+                        var gateway = gateways[j];
+                        if(gateway.companyId == company.companyId){
+                            company.gateways.push(gateway);
+                        }
+                    }
+                    results.push(company);
+                }
+                res.json({
+                    data: results
+                });
+            }, function(err){
 
+            })
+        }
+        else {
+            res.json({
+                data: results
+            });
+        }
+    }, function(err){
+        logger.error(err);
+        res.status(500).send(err);
+    })
+
+}
 
 
 /** users **/

@@ -128,11 +128,27 @@ var onAppStart =  function (ssl) {
             receivedObj.fromBuffer(message);
             var statusJson = receivedObj.getPayloadJson();
             if(statusJson){
+                var companyId = statusJson.companyId;
+
+                // if company does not exist, create one in company collection
+                service.getCompanyByCompanyId(companyId, function(c){
+                    if(!c){
+                        var company = {
+                            companyId: companyId,
+                            name: 'New Company'
+                        };
+                        service.saveCompany(company, function(newC){
+                            logger.debug('new company created with companyId: ' + companyId);
+                        })
+                    }
+                })
+
 
                 // if gateway does not exist, create one in gateway collection
                 service.getGatewayByGatewayId(gatewayId, function(gw){
                     if(!gw){
                         var gateway = {
+                            companyId: companyId,
                             gatewayId: gatewayId,
                             name: 'New Gateway'
                         };

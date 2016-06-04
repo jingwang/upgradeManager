@@ -17,6 +17,7 @@ var logger = require('winston');
  * n bytes data (executables)
  * TOPIC: STATUS, STATUS/[gatewayId] (gateway to cloud)
  * {
+ *  companyId: gateway's company id
  *  version: version,
  *  timestamp: timestamp // in milli-second
  *  }

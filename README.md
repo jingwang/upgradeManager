@@ -95,6 +95,7 @@ Gateway to cloud
 json string in the following format
 ```
  {
+  companyId: companyId, // to identify the gateway's company
   version: version, // float, e.g., 1.0
   timestamp: timestamp // in milli-second
  }
@@ -104,7 +105,7 @@ json string in the following format
 
 * Every time a gateway starts up, it sends a STATUS message to the server to indicate its current status
 * When a gateway receives the UPGRADE message, it performs the software upgrade. Upon success, it sends a STATUS message to report its new status
-* When the server receives the STATUS message from a specific gateway for the first time, it creates the gateway and populates it with the current status
+* When the server receives the STATUS message from a specific gateway for the first time, it creates the company (if not not exist) and gateway, and updates the gateway with the current status
 * When the server detects a new upgrade available, it prompts the user to upgrade
 * Once the server sends out the UPGRADE message, it shows a 'pending' status until it receives the STATUS message from the gateway
 
@@ -112,16 +113,16 @@ json string in the following format
 
 Run the following command to simulate a gateway, once the server is up
 ```
-$ node scripts/mqttClientTest.js $gatewayId
+$ node scripts/mqttClientTest.js $gatewayId $companyId
 ```
 $gatewayId: the gateway id to identify that gateway
 e.g., 
 ```
-$ node scripts/mqttClientTest.js 1
+$ node scripts/mqttClientTest.js gateway1 company1
 ```
 Add `nossl` to run in NONE-SSL mode
 ```
-$ node scripts/mqttClientTest.js 1 nossl
+$ node scripts/mqttClientTest.js gateway1 company1 nossl
 ```
 Multiple gateways can be started at the same time to simulate mutiple connections.
 

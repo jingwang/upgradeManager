@@ -15,6 +15,93 @@ function isInt(value) {
     return (x | 0) === x;
 }
 
+//Company
+exports.getCompanyByCompanyId = function(companyId, callback, errCallback) {
+    var promise = mongoose.model('Company').findOne({companyId: companyId}).exec();
+    promise.then(function (c) {
+        if(callback){
+            if(c){
+                callback(c.toObject());
+            } else {
+                callback(null);
+            }
+
+        }
+
+    }).then(null, function (err) {
+        if(errCallback){
+            errCallback(err);
+        }
+    });
+
+};
+
+exports.getCompanies = function(callback, errCallback) {
+    var condition = {};
+
+    mongoose.model('Company').find(condition, function (err, docs) {
+        if(err){
+            logger.error(err);
+            if(errCallback){
+                errCallback(err);
+            }
+        }else{
+            if(callback){
+                if(docs){
+                    var objs = [];
+                    for(var i = 0; i < docs.length; i++){
+                        objs.push(docs[i].toObject());
+                    }
+
+                    callback(objs);
+                }
+                else {
+                    callback({});
+                }
+
+            }
+        }
+    });
+};
+
+exports.saveCompany = function(company, callback, errCallback) {
+    if(company && company._id){
+        mongoose.model('Company').findOneAndUpdate({_id: company._id}, company, {upsert: false}, function (err, c) {
+            if(err){
+                logger.error(err);
+                if(errCallback){
+                    errCallback(err);
+                }
+            }else{
+                if(callback){
+                    if(doc){
+                        callback(c.toObject());
+                    }
+                    else {
+                        callback({});
+                    }
+
+                }
+            }
+        })
+    }
+
+    else if(company){
+        mongoose.model('Company').create(company, function (err, c) {
+            if (err){
+                logger.error(err);
+                if(errCallback){
+                    errCallback(err);
+                }
+            } else {
+                if(callback){
+                    callback(c.toObject());
+                }
+            }
+        });
+
+    }
+};
 
 
 // Gateway
@@ -39,8 +126,12 @@ exports.getGatewayByGatewayId = function(gatewayId, callback, errCallback) {
 };
 
 
-exports.getGateways = function(callback, errCallback) {
-    mongoose.model('Gateway').find({}, function (err, docs) {
+exports.getGateways = function(query, callback, errCallback) {
+    var condition = {};
+    if(query && query.companyId){
+        condition.companyId = query.companyId;
+    }
+    mongoose.model('Gateway').find(condition, function (err, docs) {
         if(err){
             logger.error(err);
             if(errCallback){

@@ -4,13 +4,13 @@ var mongoose = require('mongoose')
 
 var GatewaySchema = new Schema (
     {
-
-            gatewayId: {type: String, default: '', trim: true}, // unique id to identify each gateway
-            name: {type: String, default: '', trim: true},
-            address: {type: String, default: '', trim: true},
-            latitude: {type: Number},
-            longitude: {type: Number},
-            enabled: {type: Boolean, default: true}
+        companyId: {type: String, default: '', trim: true}, // gateway's company id
+        gatewayId: {type: String, default: '', trim: true}, // unique id to identify each gateway
+        name: {type: String, default: '', trim: true},
+        address: {type: String, default: '', trim: true},
+        latitude: {type: Number},
+        longitude: {type: Number},
+        enabled: {type: Boolean, default: true}
     }
 );
 

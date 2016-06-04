@@ -300,87 +300,82 @@ angular.module('upgradeManager.controllers', [])
               editableThemes, utility, $translate, $stateParams,
               events, socket, constants, localStorageService, $log, $uibModal) {
 
-        socket.on(events.gatewayAlive, function (gatewayId) {
-            for(var i = 0; i < $scope.gateways.length; i++){
-                var gateway = $scope.gateways[i];
-                if(gatewayId == gateway.gatewayId){
-                    gateway.alive = true;
-                    localStorageService.set(gatewayId, true);
+        var updateGatewayStatus = function(gatewayId, status){
+            for(var j = 0; j < $scope.companies.length; j++){
+                var company = $scope.companies[j];
+                var gateways = company.gateways;
+                if(!gateways){
+                    break;
                 }
-            }
-
-        });
-
-        socket.on(events.gatewayDead, function (gatewayId) {
-            for(var i = 0; i < $scope.gateways.length; i++){
-                var gateway = $scope.gateways[i];
-                if(gatewayId == gateway.gatewayId){
-                    gateway.alive = false;
-                    localStorageService.set(gatewayId, false);
-                }
-            }
-        });
-
-        socket.on(events.resourceAdded, function (file) {
-            for(var i = 0; i < $scope.gateways.length; i++){
-                var gateway = $scope.gateways[i];
-                if(parseFloat(file) > parseFloat(gateway.gatewaySoftwareUpgrade.softwareVersion)){
-                    gateway.newVersion = file;
-                }
-            }
-        });
-
-        socket.on(events.upgradePublished, function (obj) {
-            console.log('published');
-            var gatewayId = obj.gatewayId;
-            var softwareVersion = obj.softwareVersion;
-
-            for(var i = 0; i < $scope.gateways.length; i++){
-                var gateway = $scope.gateways[i];
-                if(gateway.gatewayId == gatewayId){
-                    gateway.gatewaySoftwareUpgrade.softwareVersion = softwareVersion;
-                    gateway.gatewaySoftwareUpgrade.status = constants.STATUS.PUBLISHED;
-                    if(gateway.newVersion == softwareVersion) {
-                        gateway.newVersion = undefined;
+                var found = false;
+                for(var i = 0; i < gateways.length; i++){
+                    var gateway = gateways[i];
+                    if(gatewayId == gateway.gatewayId){
+                        found = true;
+                        gateway.alive = status;
+                        localStorageService.set(gatewayId, status);
+                        break;
                     }
-                    refreshEventLog(gateway);
+                }
+                if(found){
                     break;
                 }
             }
-            console.log($scope.gateways);
-        });
+        };
 
-        socket.on(events.upgradeConfirmed, function (obj) {
-            console.log('confirmed');
+        var updateSoftwareUpgradeStatus = function(obj, status){
+            console.log(status);
             var gatewayId = obj.gatewayId;
             var softwareVersion = obj.softwareVersion;
-
-            for(var i = 0; i < $scope.gateways.length; i++){
-                var gateway = $scope.gateways[i];
-                if(gateway.gatewayId == gatewayId){
-                    gateway.gatewaySoftwareUpgrade.softwareVersion = softwareVersion;
-                    gateway.gatewaySoftwareUpgrade.status = constants.STATUS.CONFIRMED;
-                    if(gateway.newVersion == softwareVersion) {
-                        gateway.newVersion = undefined;
+            for(var j = 0; j < $scope.companies.length; j++){
+                var company = $scope.companies[j];
+                var gateways = company.gateways;
+                if(!gateways){
+                    break;
+                }
+                var found = false;
+                for(var i = 0; i < gateways.length; i++){
+                    var gateway = gateways[i];
+                    if(gateway.gatewayId == gatewayId){
+                        found = true;
+                        gateway.gatewaySoftwareUpgrade.softwareVersion = softwareVersion;
+                        gateway.gatewaySoftwareUpgrade.status = status;
+                        if(gateway.newVersion == softwareVersion) {
+                            gateway.newVersion = undefined;
+                        }
+                        refreshEventLog(gateway);
+                        break;
                     }
-                    refreshEventLog(gateway);
+                }
+
+                if(found){
                     break;
                 }
             }
-            console.log($scope.gateways);
-        });
+        };
 
-        $scope.openSoftwareUpgradeModal = function (gateway) {
-            openSoftwareUpgradeModalCore($http, $log, $uibModal, gateway);
+        var updateGatewayNewVersion = function(file){
+            for(var j = 0; j < $scope.companies.length; j++){
+                var company = $scope.companies[j];
+                var gateways = company.gateways;
+                if(!gateways){
+                    break;
+                }
+                for(var i = 0; i < gateways.length; i++){
+                    var gateway = gateways[i];
+                    if(parseFloat(file) > parseFloat(gateway.gatewaySoftwareUpgrade.softwareVersion)){
+                        gateway.newVersion = file;
+                    }
+                }
+
+            }
         };
 
         var refreshEventLog = function(gateway){
             $http({method: 'GET', url: '/api/eventLog?gatewayId=' + gateway.gatewayId + '&event=' + events.eventLogSoftwareDeployed}).
             success(function(logData, status, headers, config) {
-                console.log(logData);
+                //console.log(logData);
                 gateway.logs = logData.data;
-
-
             }).
             error(function(data, status, headers, config) {
 
@@ -402,11 +397,35 @@ angular.module('upgradeManager.controllers', [])
                     }
                 }
                 refreshEventLog(gateway);
-
             }).
             error(function(data, status, headers, config) {
 
             });
+        };
+
+        socket.on(events.gatewayAlive, function (gatewayId) {
+            updateGatewayStatus(gatewayId, true);
+        });
+
+        socket.on(events.gatewayDead, function (gatewayId) {
+            updateGatewayStatus(gatewayId, false);
+        });
+
+        socket.on(events.resourceAdded, function (file) {
+            updateGatewayNewVersion(file);
+        });
+
+        socket.on(events.upgradePublished, function (obj) {
+            updateSoftwareUpgradeStatus(obj, constants.STATUS.PUBLISHED);
+
+        });
+
+        socket.on(events.upgradeConfirmed, function (obj) {
+            updateSoftwareUpgradeStatus(obj, constants.STATUS.CONFIRMED);
+        });
+
+        $scope.openSoftwareUpgradeModal = function (gateway) {
+            openSoftwareUpgradeModalCore($http, $log, $uibModal, gateway);
         };
 
 
@@ -416,19 +435,29 @@ angular.module('upgradeManager.controllers', [])
             // files is sorted desc
             var files = data.data;
             console.log(files);
-            // load gateways
-            $http({method: 'GET', url: '/api/gateway'}).
+
+            // load companies
+            $http({method: 'GET', url: '/api/companyAndGateway'}).
             success(function(data, status, headers, config) {
-                $scope.gateways = data.data;
-                for(var i = 0; i < $scope.gateways.length; i++){
-                    var gw = $scope.gateways[i];
-                    gw.alive = localStorageService.get(gw.gatewayId);
-                    loadSoftwareUpgradeForGateway(gw, files);
+                console.log(data.data);
+                $scope.companies = data.data;
+
+                for(var j = 0; j < $scope.companies.length; j++){
+                    var company = $scope.companies[j];
+
+                    //console.log(company.gateways);
+                    for(var i = 0; i < company.gateways.length; i++){
+                        var gw = company.gateways[i];
+                        gw.alive = localStorageService.get(gw.gatewayId);
+                        loadSoftwareUpgradeForGateway(gw, files);
+                    }
+
                 }
             }).
             error(function(data, status, headers, config) {
 
             });
+
         }).
         error(function(data, status, headers, config) {
 
