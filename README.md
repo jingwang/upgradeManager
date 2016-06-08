@@ -25,6 +25,12 @@ $ git clone https://github.com/jingwang/updateManager.git
 $ cd updateManager
 $ npm install
 ```
+#### set up hosts file
+
+Change your hosts file to map a proper ip to mqtt.gushenxing.com, e.g.,
+```
+192.168.10.10	mqtt.gushenxing.com
+```
 
 #### config app
 ```
