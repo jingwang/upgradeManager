@@ -26,6 +26,7 @@ var onAppStart =  function () {
         if(files && files.length){
             logger.debug('Resources have changed');
             eventEmitter.emit(EVENTS.APP_RESOURCE_UPDATED, files);
+            eventEmitter.emit(EVENTS.APP_PUBLISH_AVAILABLE_VERSIONS, files);
         }
     };
 

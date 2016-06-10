@@ -68,19 +68,25 @@ client.on('connect', function () {
 
     // send status at startup
     client.publish(TOPICS.TOCLOUD_STATUS + '/' + clientId, statusObj.toBuffer());
-    // send request for latest version at startup
-    client.publish(TOPICS.TOCLOUD_REQUEST_LATEST_VERSION + '/' + clientId, requestLatestObj.toBuffer());
 
+    // send request for latest version and available versions at startup
+    client.publish(TOPICS.TOCLOUD_REQUEST_LATEST_VERSION + '/' + clientId, requestLatestObj.toBuffer());
+    client.publish(TOPICS.TOCLOUD_REQUEST_AVAILABLE_VERSIONS + '/' + clientId, requestLatestObj.toBuffer());
+
+    // subscribe to topics
     client.subscribe(TOPICS.TOGATEWAY_UPGRADE + '/' + clientId, {qos: 1});
     client.subscribe(TOPICS.TOGATEWAY_UPGRADE, {qos: 1});
     client.subscribe(TOPICS.TOGATEWAY_LATEST_VERSION + '/' + clientId, {qos: 1});
     client.subscribe(TOPICS.TOGATEWAY_LATEST_VERSION, {qos: 1});
+    client.subscribe(TOPICS.TOGATEWAY_AVAILABLE_VERSIONS + '/' + clientId, {qos: 1});
+    client.subscribe(TOPICS.TOGATEWAY_AVAILABLE_VERSIONS, {qos: 1});
     client.subscribe(TOPICS.TOGATEWAY_DOWNLOAD_UPGRADE + '/' + clientId, {qos: 1});
     client.subscribe(TOPICS.TOGATEWAY_DOWNLOAD_UPGRADE, {qos: 1});
 
-    // simulate sending request for latest version every minute
+    // simulate sending request for latest version and available versions every minute
     setInterval(function(){
         client.publish(TOPICS.TOCLOUD_REQUEST_LATEST_VERSION + '/' + clientId, requestLatestObj.toBuffer());
+        client.publish(TOPICS.TOCLOUD_REQUEST_AVAILABLE_VERSIONS + '/' + clientId, requestLatestObj.toBuffer());
 
     }, 60000);
 
@@ -126,6 +132,16 @@ client.on('message', function (topic, message) {
             }));
 
             client.publish(TOPICS.TOCLOUD_REQUEST_UPGRADE + '/' + clientId, obj.toBuffer());
+        }
+    }
+
+    else if(topicName == TOPICS.TOGATEWAY_AVAILABLE_VERSIONS) {
+        var receivedObj = new MessageObject();
+        receivedObj.fromBuffer(message);
+        var json = receivedObj.getPayloadJson();
+        if(json){
+            var versions = json.versions;
+            console.log('Available versions: ' + versions);
         }
     }
 

@@ -62,11 +62,36 @@ var onAppStart =  function (ssl) {
 
     };
 
+    var publishAvailableVersions = function(client, gatewayId){
+        var files = service.getResourcesSync();
+        var versions = [];
+        if(files && files.length){
+            versions = files;
+        }
+
+        var messageObj = new MessageObject(new Date(), JSON.stringify({
+            versions: versions
+        }));
+
+        var messageBuffer = messageObj.toBuffer();
+        if(gatewayId){
+            client.publish(TOPICS.TOGATEWAY_AVAILABLE_VERSIONS + '/' + gatewayId, messageBuffer, {qos: 1});
+        } else {
+            client.publish(TOPICS.TOGATEWAY_AVAILABLE_VERSIONS, messageBuffer, {qos: 1});
+        }
+
+    };
+
     // listen to event to publish TOGATEWAY message
 
     eventEmitter.removeAllListeners(EVENTS.APP_PUBLISH_LATEST_VERSION)
         .on(EVENTS.APP_PUBLISH_LATEST_VERSION, function(file){
             publishLatestVersion(client);
+        });
+
+    eventEmitter.removeAllListeners(EVENTS.APP_PUBLISH_AVAILABLE_VERSIONS)
+        .on(EVENTS.APP_PUBLISH_AVAILABLE_VERSIONS, function(file){
+            publishAvailableVersions(client);
         });
 
 
@@ -139,6 +164,7 @@ var onAppStart =  function (ssl) {
         // subscribe to all TOCLOUD topics
         client.subscribe(TOPICS.TOCLOUD_STATUS + '/+');
         client.subscribe(TOPICS.TOCLOUD_REQUEST_LATEST_VERSION + '/+');
+        client.subscribe(TOPICS.TOCLOUD_REQUEST_AVAILABLE_VERSIONS + '/+');
         client.subscribe(TOPICS.TOCLOUD_REQUEST_UPGRADE + '/+');
 
     });
@@ -228,6 +254,9 @@ var onAppStart =  function (ssl) {
                 })
             }
 
+        }
+        else if(topicName == TOPICS.TOCLOUD_REQUEST_AVAILABLE_VERSIONS && gatewayId != undefined){
+            publishAvailableVersions(client, gatewayId);
         }
 
         //    client.end();
