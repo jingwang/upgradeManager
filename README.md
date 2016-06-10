@@ -61,13 +61,13 @@ URL: http://localhost:5001
 
 **Topic**
 
-TOGATEWAY_UPGRADE
+TOGATEWAY/UPGRADE
 
-TOGATEWAY_UPGRADE/$gatewayId
+TOGATEWAY/UPGRADE/$gatewayId
 
 **Description**
 
-The cloud server send this message to initiate a software upgrade to all gateways (UPGRADE) or a specific gateway (UPGRADE/$gatewayId)
+The cloud server sends this message to initiate a software upgrade to all gateways (TOGATEWAY/UPGRADE) or a specific gateway (TOGATEWAY/UPGRADE/$gatewayId)
 
 **Direction**
 
@@ -90,13 +90,13 @@ n-byte: executable file content
 
 **Topic**
 
-TOGATEWAY_LATEST_VERSION
+TOGATEWAY/LATEST_VERSION
 
-TOGATEWAY_LATEST_VERSION/$gatewayId
+TOGATEWAY/LATEST_VERSION/$gatewayId
 
 **Description**
 
-The cloud server send this message to inform the latest available software version to all gateways (UPGRADE) or a specific gateway (UPGRADE/$gatewayId)
+The cloud server sends this message to inform the latest available software version to all gateways (TOGATEWAY/LATEST_VERSION) or a specific gateway (TOGATEWAY/LATEST_VERSION/$gatewayId)
 
 **Direction**
 
@@ -119,17 +119,50 @@ json string in the following format
  }
 ```
 
+#### Available Versions 
+
+**Topic**
+
+TOGATEWAY/AVAILABLE_VERSIONS
+
+TOGATEWAY/AVAILABLE_VERSIONS/$gatewayId
+
+**Description**
+
+The cloud server sends this message to inform all available software versions to all gateways (TOGATEWAY/AVAILABLE_VERSIONS) or a specific gateway (TOGATEWAY/AVAILABLE_VERSIONS/$gatewayId)
+
+**Direction**
+
+Cloud to gateway
+
+**Format**
+
+* Header: 12 bytes
+
+4-byte: int, timestamp
+4-byte: int, payload length
+4-byte: int, payload crc
+
+* Payload
+
+json string in the following format
+```
+ {
+  versions: [version1, version2, ...]
+ }
+```
+
 #### Download Upgrade 
 
 **Topic**
 
-TOGATEWAY_DOWNLOAD_UPGRADE
+TOGATEWAY/DOWNLOAD_UPGRADE
 
-TOGATEWAY_DOWNLOAD_UPGRADE/$gatewayId
+TOGATEWAY/DOWNLOAD_UPGRADE/$gatewayId
 
 **Description**
 
-The cloud server send this message to transfer the content of the requested version of software upgrade to all gateways (UPGRADE) or a specific gateway (UPGRADE/$gatewayId)
+The cloud server sends this message to transfer the content of the requested version of software upgrade to all gateways (TOGATEWAY/DOWNLOAD_UPGRADE) or a specific gateway (TOGATEWAY/DOWNLOAD_UPGRADE/$gatewayId)
 
 **Direction**
 
@@ -152,11 +185,11 @@ n-byte: executable file content
 
 **Topic**
 
-TOCLOUD_STATUS/$gatewayId
+TOCLOUD/STATUS/$gatewayId
 
 **Description**
 
-The gateway send this message to report its current software version and last-upgrade-timestamp
+The gateway sends this message to report its current software version and last-upgrade-timestamp
 
 **Direction**
 
@@ -185,11 +218,37 @@ json string in the following format
 
 **Topic**
 
-TOCLOUD_REQUEST_LATEST_VERSION/$gatewayId
+TOCLOUD/REQUEST_LATEST_VERSION/$gatewayId
 
 **Description**
 
-The gateway send this message to request the latest available software version
+The gateway sends this message to request the latest available software version
+
+**Direction**
+
+Gateway to cloud
+
+**Format**
+
+* Header: 12 bytes
+
+4-byte: int, timestamp
+4-byte: int, payload length
+4-byte: int, payload crc
+
+* Payload
+
+empty
+
+#### Request Available Versions
+
+**Topic**
+
+TOCLOUD/REQUEST_AVAILABLE_VERSIONS/$gatewayId
+
+**Description**
+
+The gateway sends this message to request all available software versions
 
 **Direction**
 
@@ -211,11 +270,11 @@ empty
 
 **Topic**
 
-TOCLOUD_REQUEST_UPGRADE/$gatewayId
+TOCLOUD/REQUEST_UPGRADE/$gatewayId
 
 **Description**
 
-The gateway send this message to request the content of a specific version of software upgrade
+The gateway sends this message to request the content of a specific version of software upgrade
 
 **Direction**
 
@@ -243,11 +302,13 @@ json string in the following format
 
 * Every time a gateway starts up, it sends a "Status" message to the server to indicate its current status
 * Every time a gateway starts up, it sends a "Request Latest Version" message to the server to request the latest available software version
+* Every time a gateway starts up, it sends a "Request Available Versions" message to the server to request all available software versions
 * When a gateway receives the "Upgrade" message, it performs the software upgrade. Upon success, it sends a "Status" message to report its new status
 * A gateway sends the "Request Upgrade" message to request the content of a specific upgrade
 * When the server receives the "Status" message from a specific gateway for the first time, it creates the company (if not not exist) and gateway, and updates the gateway with the current status
 * When the server detects a new upgrade available, it prompts the user with a new upgrade, and sends a "Latest Version" message to all gateways to indicate new version available
-* When the server receives the "Request Latest Version" message, it sends a "Latest Version" message to all gateways to indicate new version available
+* When the server receives the "Request Latest Version" message, it sends a "Latest Version" message to the inquiring gateway to indicate new version available
+* When the server receives the "Request Available Versions" message, it sends a "Available Versions" message to to the inquiring gateway to indicate all versions available
 * When the server receives the "Request Upgrade" message, it sends a "Download Upgrade" message to deliver the content of the requested upgrade
 * Once the server sends out the "Upgrade" message, it shows a 'pending' status until it receives the "Status" message from the gateway
 * Note: if the gateway receives a "Upgrade" message, it should perform the upgrade right away; if the gateway receives a "Download Upgrade" message, it does not need to perform the upgrade right away - it can choose to save the content and perform the upgrade later
