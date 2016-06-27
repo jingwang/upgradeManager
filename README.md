@@ -347,7 +347,7 @@ $ node scripts/mqttClientTest.js gateway2 2
 ```
 Add `nossl` to run in NONE-SSL mode
 ```
-$ node scripts/mqttClientTest.js gateway1 company1 nossl
+$ node scripts/mqttClientTest.js gateway2 2 nossl
 ```
 Multiple gateways can be started at the same time to simulate mutiple connections.
 
