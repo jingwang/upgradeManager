@@ -192,7 +192,7 @@ var onAppStart =  function (ssl) {
                     if(!c){
                         var company = {
                             companyId: companyId,
-                            name: 'New Company'
+                            name: 'New Company ' + companyId // give it a default name
                         };
                         service.saveCompany(company, function(newC){
                             logger.debug('new company created with companyId: ' + companyId);
@@ -207,7 +207,7 @@ var onAppStart =  function (ssl) {
                         var gateway = {
                             companyId: companyId,
                             gatewayId: gatewayId,
-                            name: 'New Gateway'
+                            name: 'New Gateway ' + gatewayId // give it a default name
                         };
                         service.saveGateway(gateway, function(newGw){
                             logger.debug('new gateway created with gatewayId: ' + gatewayId);

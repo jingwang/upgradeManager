@@ -81,17 +81,18 @@
                 </a>
                 <ul class="dropdown-menu dropdown-user" uib-dropdown-menu aria-labelledby="user-drowdown">
 
-                    <li>
+                    <li ng-show="showUpdateUserProfile">
                         <a href="#" ng-click="openUserProfileModal();"><i class="fa fa-user fa-fw"></i> {{'navigation.userSetting' | translate }}</a>
                     </li>
-                    <% if (user.role == 'admin') { %>
-                    <li>
+
+                    <li ng-show="showManageUsers">
                         <a href="#" ng-click="openUserManagementModal();"><i class="fa fa-users fa-fw"></i> {{'navigation.userManagement' | translate }}</a>
                     </li>
-                    <li>
+
+                    <li ng-show="showCreateUser">
                         <a href="#" ng-click="openCreateUserModal();"><i class="fa fa-user-plus fa-fw"></i> {{'navigation.createUser' | translate }}</a>
                     </li>
-                    <% } %>
+
 
                     <li class="divider"></li>
                     <li>
@@ -214,6 +215,15 @@
                         </select>
                     </div>
 
+                    <div class="form-group" show-errors>
+                        <label>{{'user.company' | translate }}</label>
+                        <select class="form-control"
+                                name="companyId"
+                                ng-model="newUser.companyId">
+                            <option ng-repeat="company in companies" value="{{company.companyId}}">{{company.name}}</option>
+                        </select>
+                    </div>
+
                     <div class="input-error" ng-show="err">{{'validation.CREATE_USER_FAIL' | translate}}</div>
                     <div class="input-info" ng-show="created.username">{{'validation.CREATE_USER_SUCCESS' | translate}}: {{created.username}}</div>
                 </form>
@@ -301,12 +311,21 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-3">
                             <div class="form-group" show-errors>
                                 <select class="form-control"
                                         name="role"
                                         ng-model="user.role">
                                     <option ng-repeat="ro in roleOptions" value="{{ro}}">{{'user.' + ro | translate }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group" show-errors>
+                                <select class="form-control"
+                                        name="companyId"
+                                        ng-model="user.companyId">
+                                    <option ng-repeat="company in companies" value="{{company.companyId}}">{{company.name }}</option>
                                 </select>
                             </div>
                         </div>

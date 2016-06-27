@@ -38,6 +38,20 @@ exports.EVENTS = {
 
 };
 
+exports.USER_ROLES = {
+    ADMIN: 'admin',
+    SUPER: 'super',
+    USER: 'user'
+};
+
+exports.PAGE_NAMES = {
+    DASHBOARD: 'dashboard',
+    UPGRADE: 'upgrade',
+    CREATE_USER: 'createUser',
+    MANAGE_USERS: 'manageUsers',
+    UPDATE_USER_PROFILE: 'updateUserProfile'
+}
+
 
 exports.TOPICS = {
     TOGATEWAY: 'TOGATEWAY',

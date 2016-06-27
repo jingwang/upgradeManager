@@ -181,7 +181,8 @@ angular.module('upgradeManager.services', []).
     return {
         USER_ROLE: {
             ADMIN: 'admin',
-            USER: 'user'
+            USER: 'user',
+            SUPER: 'super'
         },
         STATUS: {
             PUBLISHED: 'PUBLISHED',

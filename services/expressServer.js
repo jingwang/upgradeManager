@@ -47,11 +47,13 @@ var apiUseAuthentication = function(req, res, next) {
 
 };
 
+// TODO: get this from db
 var apiNoAuthentication = function(req, res, next) {
     req.user = {
-        username: 'admin@gushenxing.com',
-        name: 'Admin',
-        role: 'admin'
+        companyId: '1',
+        username: 'super@gushenxing.com',
+        name: 'Super',
+        role: 'super'
     };
     next();
 };
@@ -107,6 +109,15 @@ var initApp = function(app, ssl){
             }
         })
 
+        //super users can access all pages
+        user.use(function (req) {
+            if(req.user){
+                if (req.user.role === 'super') {
+                    return true;
+                }
+            }
+
+        });
         //admin users can access all pages
         user.use(function (req) {
             if(req.user){
@@ -170,6 +181,7 @@ var initApp = function(app, ssl){
 
     // company
     app.get('/api/company', apiAuthentication, api.getCompanies);
+    app.get('/api/companyWithAuthorization', apiAuthentication, api.getCompaniesWithAuthorization);
     app.get('/api/company/companyId/:companyId', apiAuthentication, api.getCompanyByCompanyId);
     app.post('/api/company', apiAuthentication, api.saveCompany); // save or create a company
 
@@ -180,6 +192,7 @@ var initApp = function(app, ssl){
 
     // company + gateway
     app.get('/api/companyAndGateway', apiAuthentication, api.getCompanyAndGateways);
+    app.get('/api/companyAndGatewayWithAuthorization', apiAuthentication, api.getCompanyAndGatewaysWithAuthorization);
 
     // user authorization
     app.get('/api/isAuthorized/:page', apiAuthentication, api.isAuthorized);
@@ -187,6 +200,8 @@ var initApp = function(app, ssl){
     // user
     app.get('/api/user/:username', apiAuthentication, api.getUser);
     app.get('/api/user', apiAuthentication, api.getUsers);
+    app.get('/api/userWithAuthorization', apiAuthentication, api.getUsersWithAuthorization);
+    app.get('/api/userRoles', apiAuthentication, api.getUserRoles);
     app.post('/api/user', apiAuthentication, api.createUser);
     app.post('/api/user/update', apiAuthentication, api.updateUserProfile);
     app.post('/api/users/update', apiAuthentication, api.updateUserProfiles);

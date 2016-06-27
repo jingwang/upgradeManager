@@ -124,6 +124,7 @@ angular.module('upgradeManager.controllers', [])
 
     var initNewUser = function() {
         return {
+            companyId: '',
             username: '',
             password: '',
             role: 'user'
@@ -132,13 +133,38 @@ angular.module('upgradeManager.controllers', [])
 
     $scope.newUser = initNewUser();
 
-    $scope.roleOptions = [constants.USER_ROLE.USER, constants.USER_ROLE.ADMIN];
+    //$scope.roleOptions = [constants.USER_ROLE.USER, constants.USER_ROLE.ADMIN, constants.USER_ROLE.SUPER];
+
+
+    $http({method: 'GET', url: '/api/userRoles'}).
+    success(function(data, status, headers, config) {
+
+        $scope.roleOptions = data.data;
+
+
+    }).
+    error(function(data, status, headers, config) {
+        $scope.roleOptions = [];
+
+    });
+
+    $http({method: 'GET', url: '/api/companyWithAuthorization'}).
+    success(function(data, status, headers, config) {
+
+        $scope.companies = data.data;
+        console.log($scope.companies);
+
+    }).
+    error(function(data, status, headers, config) {
+        $scope.companies = [];
+
+    });
+
 
     $scope.ok = function () {
         // create user
-        $http({method: 'POST', url: '/api/user', data: $scope.newUser}).
+        $http({method: 'POST', url: '/api/userWithAuthorization', data: $scope.newUser}).
         success(function(data, status, headers, config) {
-
             if(data.data){
                 $scope.err = false;
                 $scope.newUser = initNewUser();
@@ -168,7 +194,21 @@ angular.module('upgradeManager.controllers', [])
 
     $scope.err = false;
     $scope.updated = false;
-    $http({method: 'GET', url: '/api/user'}).
+
+    $http({method: 'GET', url: '/api/companyWithAuthorization'}).
+    success(function(data, status, headers, config) {
+
+        $scope.companies = data.data;
+        console.log($scope.companies);
+
+    }).
+    error(function(data, status, headers, config) {
+        $scope.companies = [];
+
+    });
+
+
+    $http({method: 'GET', url: '/api/userWithAuthorization'}).
     success(function(data, status, headers, config) {
 
         $scope.users = data.data
@@ -180,7 +220,19 @@ angular.module('upgradeManager.controllers', [])
 
     });
 
-    $scope.roleOptions = [constants.USER_ROLE.USER, constants.USER_ROLE.ADMIN];
+    //$scope.roleOptions = [constants.USER_ROLE.USER, constants.USER_ROLE.ADMIN, constants.USER_ROLE.SUPER];
+
+    $http({method: 'GET', url: '/api/userRoles'}).
+    success(function(data, status, headers, config) {
+
+        $scope.roleOptions = data.data;
+
+
+    }).
+    error(function(data, status, headers, config) {
+        $scope.roleOptions = [];
+
+    });
 
     $scope.ok = function () {
 
@@ -272,6 +324,34 @@ angular.module('upgradeManager.controllers', [])
         success(function(data, status, headers, config) {
             var isAuthorized = data;
             $scope.showUpgrade = isAuthorized;
+        }).
+        error(function(data, status, headers, config) {
+
+        });
+
+        // user management authentication
+        $http({cache: true, method: 'GET', url: '/api/isAuthorized/createUser'}).
+        success(function(data, status, headers, config) {
+            var isAuthorized = data;
+            $scope.showCreateUser = isAuthorized;
+        }).
+        error(function(data, status, headers, config) {
+
+        });
+
+        $http({cache: true, method: 'GET', url: '/api/isAuthorized/manageUsers'}).
+        success(function(data, status, headers, config) {
+            var isAuthorized = data;
+            $scope.showManageUsers = isAuthorized;
+        }).
+        error(function(data, status, headers, config) {
+
+        });
+
+        $http({cache: true, method: 'GET', url: '/api/isAuthorized/updateUserProfile'}).
+        success(function(data, status, headers, config) {
+            var isAuthorized = data;
+            $scope.showUpdateUserProfile = isAuthorized;
         }).
         error(function(data, status, headers, config) {
 
@@ -443,7 +523,7 @@ angular.module('upgradeManager.controllers', [])
             console.log($scope.files);
 
             // load companies
-            $http({method: 'GET', url: '/api/companyAndGateway'}).
+            $http({method: 'GET', url: '/api/companyAndGatewayWithAuthorization'}).
             success(function(data, status, headers, config) {
                 console.log(data.data);
                 $scope.companies = data.data;

@@ -33,10 +33,20 @@ Change your hosts file to map a proper ip to mqtt.gushenxing.com, e.g.,
 ```
 
 #### config app
+
+The following command will initialize the application with bootstrap data, including a super user (username: super@gushenxing.com, password: gushenxing123) and a super company (companyId: 1):
 ```
 $ cd /usr/local/src/updateManager
 $ mkdir resources
 $ npm run init-app
+```
+
+#### populate a few sample companies
+
+The following command will populate the database with 2 companies (companyId: 2, companyId: 3):
+```
+$ cd /usr/local/src/updateManager
+$ npm run sample-companies
 ```
 
 #### start up application in ssl mode (i.e., mqtt in ssl, application has user authentication)
@@ -45,7 +55,7 @@ $ cd /usr/local/src/updateManager
 $ npm start
 ```
 URL: http://localhost:5001
-username: admin@gushenxing.com
+username: super@gushenxing.com
 password: gushenxing123
 
 #### start up application in none-ssl mode (i.e., mqtt not in ssl, application does not have user authentication)
@@ -313,6 +323,17 @@ json string in the following format
 * Once the server sends out the "Upgrade" message, it shows a 'pending' status until it receives the "Status" message from the gateway
 * Note: if the gateway receives a "Upgrade" message, it should perform the upgrade right away; if the gateway receives a "Download Upgrade" message, it does not need to perform the upgrade right away - it can choose to save the content and perform the upgrade later
 
+## Authorization
+
+#### User Roles
+
+There are three user roles:
+
+* super: This is the super user. The super user belongs to the 'super' company. The super user can view the dashboard page and view/manage the upgrade page with all companies' gateways; the super user can also create users, manage users (update all other users' role and company) and update its own profile
+* admin: This is the company's admin user. It belongs to a company. The admin user can view the dashboard page and view/manage the upgrade page with its own company's gateways; the admin user can also create users within its company, manage users within its company and update its own profile
+* user: This is the company's user user. It belongs to a company. The user user can view the dashboard. It cannot view the upgrade page. It can only update its own user profile.
+
+
 ## Gateway Simulation
 
 Run the following command to simulate a gateway, once the server is up
@@ -322,7 +343,7 @@ $ node scripts/mqttClientTest.js $gatewayId $companyId
 $gatewayId: the gateway id to identify that gateway
 e.g., 
 ```
-$ node scripts/mqttClientTest.js gateway1 company1
+$ node scripts/mqttClientTest.js gateway2 2
 ```
 Add `nossl` to run in NONE-SSL mode
 ```

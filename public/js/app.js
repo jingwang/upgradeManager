@@ -90,12 +90,16 @@ angular.module('upgradeManager',
 
             'user': {
                 'username': 'Username',
+                'password': 'Password',
+                'company': 'Company',
+                'namePrompt': 'Please enter your name',
                 'usernamePrompt': 'Please enter the username',
                 'passwordPrompt': 'Please enter the password',
                 'confirmPassword': 'Confirm password',
                 'role': 'Role',
                 'admin': 'Admin',
                 'user': 'User',
+                'super': 'Super',
                 'name': 'Name',
                 'newPassword': 'New password ( only if reset )',
                 'confirmNewPassword': 'Confirm new password'

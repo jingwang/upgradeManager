@@ -125,6 +125,31 @@ exports.getGatewayByGatewayId = function(gatewayId, callback, errCallback) {
 
 };
 
+exports.getGatewaysByCompanyId = function(companyId, callback, errCallback) {
+    var promise = mongoose.model('Gateway').find({companyId: companyId}).exec();
+    promise.then(function (docs) {
+        if(callback){
+            if(docs){
+                var objs = [];
+                for(var i = 0; i < docs.length; i++){
+                    objs.push(docs[i].toObject());
+                }
+
+                callback(objs);
+            } else {
+                callback([]);
+            }
+
+        }
+
+    }).then(null, function (err) {
+        if(errCallback){
+            errCallback(err);
+        }
+    });
+
+};
+
 
 exports.getGateways = function(query, callback, errCallback) {
     var condition = {};
@@ -148,7 +173,7 @@ exports.getGateways = function(query, callback, errCallback) {
                     callback(objs);
                 }
                 else {
-                    callback({});
+                    callback([]);
                 }
 
             }
@@ -200,9 +225,12 @@ exports.saveGateway = function(gateway, callback, errCallback) {
 
 
 // User
-exports.createUser = function(username, password, role, callback){
+exports.createUser = function(user, callback){
+
+    var password = user.password;
+    delete user.password;
     var User = mongoose.model('User');
-    User.register(new User({ username : username, role: role }), password, function(err, user) {
+    User.register(new User(user), password, function(err, user) {
         if(callback){
             callback(err, user);
         }
@@ -269,7 +297,8 @@ exports.updateUserProfiles = function(users, callback, errCallback) {
         var user = users[i];
         var username = user.username;
         var role = user.role;
-        var promise = User.findOneAndUpdate({username: username}, {$set: {role: role}}, {new: true}).exec();
+        var companyId = user.companyId;
+        var promise = User.findOneAndUpdate({username: username}, {$set: {role: role, companyId: companyId}}, {new: true}).exec();
         promiseList.push(promise);
     }
 
@@ -307,6 +336,24 @@ exports.getUser = function(username, callback, errCallback) {
 exports.getUsers = function(callback, errCallback) {
     var User = mongoose.model('User');
     User.find(function(err, docs) {
+        if(docs){
+            if(callback){
+                callback(docs);
+            }
+        }
+        else {
+
+            if(errCallback){
+                errCallback();
+            }
+        }
+
+    });
+};
+
+exports.getUsersByCompanyId = function(companyId, callback, errCallback) {
+    var User = mongoose.model('User');
+    User.find({companyId: companyId}, function(err, docs) {
         if(docs){
             if(callback){
                 callback(docs);

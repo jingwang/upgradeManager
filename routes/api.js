@@ -1,6 +1,7 @@
 var _ = require("underscore");
 var fs = require('fs');
 var EVENTS = require('../services/constant.js').EVENTS;
+var USER_ROLES = require('../services/constant.js').USER_ROLES;
 var eventEmitter = require('../services/event.js').eventEmitter;
 var service = require('../services/index.js');
 var _ = require("underscore");
@@ -59,6 +60,36 @@ exports.getCompanies = function (req, res) {
         res.status(500).send(err);
     })
 };
+
+
+exports.getCompaniesWithAuthorization = function (req, res) {
+    var user = req.user;
+    if(user && user.role != USER_ROLES.SUPER && user.companyId){
+        service.getCompanyByCompanyId(user.companyId, function(c){
+            res.json({
+                data: [c]
+            });
+        }, function(err){
+            logger.error(err);
+            res.status(500).send(err);
+        })
+    } else if(user && user.role == USER_ROLES.SUPER){
+        service.getCompanies(function(cs){
+            res.json({
+                data: cs
+            });
+        }, function(err){
+            logger.error(err);
+            res.status(500).send(err);
+        })
+    } else {
+        res.json({
+            data: []
+        });
+    }
+
+};
+
 
 exports.saveCompany = function (req, res) {
     var company = req.body;
@@ -129,6 +160,7 @@ exports.saveGateway = function (req, res) {
 // company and gateway
 exports.getCompanyAndGateways = function(req, res) {
     var results = [];
+    // get all companies
     service.getCompanies(function(companies){
         if(companies && companies.length){
             service.getGateways({}, function(gateways){
@@ -160,17 +192,82 @@ exports.getCompanyAndGateways = function(req, res) {
         res.status(500).send(err);
     })
 
-}
+};
+
+exports.getCompanyAndGatewaysWithAuthorization = function(req, res) {
+    var results = [];
+    var user = req.user;
+    console.log(user);
+    if(user && user.role == USER_ROLES.ADMIN && user.companyId){
+        // get company by user.companyId
+        service.getCompanyByCompanyId(user.companyId, function(company){
+            console.log(company);
+            if(company && company.companyId){
+                service.getGatewaysByCompanyId(company.companyId, function(gateways){
+                    company.gateways = gateways?gateways:[];
+                    results.push(company);
+                    res.json({
+                        data: results
+                    });
+                }, function(err){
+
+                })
+            }
+            else {
+                res.json({
+                    data: results
+                });
+            }
+        }, function(err){
+            logger.error(err);
+            res.status(500).send(err);
+        })
+    } else if(user && user.role == USER_ROLES.SUPER){
+        // get all companies
+        service.getCompanies(function(companies){
+            if(companies && companies.length){
+                service.getGateways({}, function(gateways){
+                    for(var i = 0; i < companies.length; i++){
+                        var company = companies[i];
+                        company.gateways = [];
+                        for(var j = 0; j < gateways.length; j++){
+                            var gateway = gateways[j];
+                            if(gateway.companyId == company.companyId){
+                                company.gateways.push(gateway);
+                            }
+                        }
+                        results.push(company);
+                    }
+                    res.json({
+                        data: results
+                    });
+                }, function(err){
+
+                })
+            }
+            else {
+                res.json({
+                    data: results
+                });
+            }
+        }, function(err){
+            logger.error(err);
+            res.status(500).send(err);
+        })
+    } else {
+        // empty
+        res.json({
+            data: results
+        });
+    }
+
+};
 
 
 /** users **/
 exports.createUser = function(req, res){
-
-    var username = req.body.username;
-    var password = req.body.password;
-    var role = req.body.role;
-
-    service.createUser(username, password, role, function(err, user){
+    var user = req.body;
+    service.createUser(user, function(err, user){
         if(err || !user){
             res.json({
                 error: 'USERNAME_EXISTS'
@@ -214,6 +311,25 @@ exports.isAuthorized = function(req, res) {
         authorized = service.isAuthorized(role, action);
     }
     res.json(authorized);
+};
+
+exports.getUserRoles = function(req, res) {
+    var user = req.user;
+
+    if(user.role == USER_ROLES.SUPER) {
+        res.json({
+            data: [USER_ROLES.SUPER, USER_ROLES.ADMIN, USER_ROLES.USER]
+        });
+    } else if(user.role == USER_ROLES.ADMIN) {
+        res.json({
+            data: [USER_ROLES.ADMIN, USER_ROLES.USER]
+        });
+    } else {
+        res.json({
+            data: []
+        });
+    }
+
 }
 
 
@@ -238,6 +354,34 @@ exports.getUsers = function(req, res) {
         logger.error(err);
         res.status(500).send(err);
     })
+}
+
+exports.getUsersWithAuthorization = function(req, res) {
+    var user = req.user;
+    if(user && user.role != USER_ROLES.SUPER && user.companyId) {
+        service.getUsersByCompanyId(user.companyId, function(users){
+            res.json({
+                data: users
+            });
+        }, function(err){
+            logger.error(err);
+            res.status(500).send(err);
+        })
+    } else if(user && user.role == USER_ROLES.SUPER) {
+        service.getUsers(function(users){
+            res.json({
+                data: users
+            });
+        }, function(err){
+            logger.error(err);
+            res.status(500).send(err);
+        })
+    } else {
+        res.json({
+            data: []
+        });
+    }
+
 }
 
 exports.updateUserProfile = function(req, res) {

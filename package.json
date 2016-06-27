@@ -38,6 +38,7 @@
   },
   "scripts": {
     "init-app": "node scripts/initApp.js",
+    "sample-companies": "node scripts/sampleCompanies.js",
     "start": "node app.js",
     "start-nossl": "node app.js nossl"
   }

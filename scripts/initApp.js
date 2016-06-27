@@ -29,11 +29,18 @@ mongoose.connection.on('error', function (err) {
 
 
 var defaultUser = {
-    username: 'admin@gushenxing.com',
-    name: 'Admin',
-    role: 'admin',
+    username: 'super@gushenxing.com',
+    name: 'Super',
+    role: 'super',
+    companyId: '1',
     password: 'gushenxing123'
 };
+
+var superCompany = {
+    companyId: '1',
+    name: 'Super',
+    registered: true
+}
 
 
 console.log(defaultUser);
@@ -50,6 +57,11 @@ promise.then(function () {
 
 }).then(function () {
     console.log('Removed Company');
+    return mongoose.model('Company').create(superCompany);
+
+}).then(function (com) {
+    console.log('Created super Company: ');
+    console.log(com);
     return mongoose.model('GatewaySoftwareUpgrade').remove({}).exec();
 
 }).then(function () {
@@ -58,6 +70,7 @@ promise.then(function () {
 }).then(null, function (err) {
     console.log(err);
 });
+
 
 User.remove({}, function(err){
     if(!err){
