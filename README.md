@@ -1,6 +1,6 @@
 # Upgrade Manager
 
-The Upgrade Manager is a web application managing software upgrade for registered clients via mqtt.
+The Upgrade Manager is a web application managing software upgrade for registered clients via mqtt. It can be used to implement OTA via MQTT
 
 ## Installation
 
